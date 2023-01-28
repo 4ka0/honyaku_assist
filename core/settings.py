@@ -78,7 +78,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': env.dj_db_url('DATABASE_URL')
+    "default": {
+        "ENGINE": env.str('DB-ENGINE'),
+        "NAME": env.str('DB-NAME'),
+        "USER": env.str('DB-USER'),
+        "PASSWORD": env.str('DB-PASSWORD'),
+        "HOST": env.str('DB-HOST'),
+        "PORT": env.int('DB-PORT'),
+    }
 }
 
 
