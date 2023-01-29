@@ -1,0 +1,41 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+        <title>Kikai Compare</title>
+    </head>
+
+    <body>
+        <main>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col bg-info mx-4 my-4">
+
+                        <h2 class="my-4">Kikai Compare</h2>
+
+                        {% block content %}
+                        {% endblock %}
+
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Bootstrap and Popper JS -->
+        <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+
+    </body>
+
+</html>
