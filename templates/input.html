@@ -2,9 +2,10 @@
 
 {% block content %}
 
-    <h3 class="my-4">Input page</h3>
-    <p>Input text to be translated ...</p>
-    <p>Select source and target languages ...</p>
-    <p>"Translate" button</p>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn btn-primary">Translate</button>
+    </form>
 
 {% endblock %}
