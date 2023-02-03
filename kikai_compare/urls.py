@@ -1,8 +1,9 @@
 from django.urls import path
 
-from .views import InputPageView
+from .views import input_page_view, output_page_view
 
 
 urlpatterns = [
-    path('', InputPageView.as_view(), name='home'),
+    path('input', input_page_view, name='input_page'),
+    path('output', output_page_view, name='output_page'),
 ]

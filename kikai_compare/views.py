@@ -1,9 +1,21 @@
-from django.views.generic import TemplateView
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 
 
-class InputPageView(TemplateView):
-    template_name = "input.html"
+from .forms import InputForm
 
 
-class OutputPageView(TemplateView):
-    template_name = "output.html"
+def input_page_view(request):
+    if request.method == 'POST':
+        form = InputForm(request.POST)
+        if form.is_valid():
+            # Process form data in form.cleaned_data as required
+            return HttpResponseRedirect(reverse_lazy('output_page'))
+    else:
+        form = InputForm()
+    return render(request, 'input.html', {'form': form})
+
+
+def output_page_view(request):
+    return render(request, 'output.html')
