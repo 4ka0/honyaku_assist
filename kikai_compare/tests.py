@@ -1,16 +1,7 @@
 from django.test import TestCase
-from django.forms.widgets import Textarea, TextInput, RadioSelect
+from django.forms.widgets import Textarea, RadioSelect
 
 from .forms import InputForm
-
-
-"""
-- Test fields
-  - Labels, help text, and other properties you have set
-- Test valid submission of complete form
-- Test invalid submission of empty form
-- Test invalid submissions with regard to each field
-"""
 
 
 class TestInputForm(TestCase):
