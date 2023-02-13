@@ -2,6 +2,20 @@
 
 {% block content %}
 
-    <a href="{% url 'input_page' %}" class="btn btn-primary">New translation</a>
+    <p class="mb-3">Source text ({{ source_lang|upper }}):
+        <div class="alert alert-primary" role="alert">
+            {{ source_text }}
+        </div>
+    </p>
+
+    <p class="mb-3">Machine output ({{ target_lang|upper }}):
+        <div class="alert alert-info" role="alert">
+            {{ deepl_result }}
+        </div>
+    </p>
+
+    <div class="text-center my-4">
+        <a href="{% url 'input_page' %}" class="btn btn-primary">New translation</a>
+    </div>
 
 {% endblock %}

@@ -11,3 +11,4 @@ python-dotenv==0.21.1
 sqlparse==0.4.3
 django-crispy-forms==1.14.0
 crispy-bootstrap5==0.7
+deepl==1.13.0
