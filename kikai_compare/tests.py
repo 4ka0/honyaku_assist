@@ -21,7 +21,18 @@ class TestInputForm(TestCase):
                 "source_text": "Zelda series is a computer game series developed by Nintendo.",
             }
         )
-
+        cls.invalid_form_no_direction = InputForm(
+            {
+                "direction": "",
+                "source_text": "Zelda series is a computer game series developed by Nintendo.",
+            }
+        )
+        cls.invalid_form_no_source_text = InputForm(
+            {
+                "direction": "Ja>En",
+                "source_text": "",
+            }
+        )
 
     # Test field properties
 
@@ -66,6 +77,7 @@ class TestInputForm(TestCase):
         self.assertTrue(self.empty_form.fields['source_text'].strip)
 
     # Test submission of valid forms
+    
     def test_valid_form_ja_en(self):
         self.assertTrue(self.valid_form_ja_en.is_bound)
         self.assertTrue(self.valid_form_ja_en.is_valid())
@@ -93,4 +105,27 @@ class TestInputForm(TestCase):
         )
 
     # Test submission of invalid form: empty form
+
+    def test_form_with_no_input(self):
+        self.assertFalse(self.empty_form.is_bound)
+        self.assertFalse(self.empty_form.is_valid())
+        with self.assertRaises(AttributeError):
+            self.empty_form.cleaned_data
+
     # Test submission of invalid form: invalid fields
+
+    def test_invalid_form_no_direction(self):
+        self.assertFalse(self.invalid_form_no_direction.is_valid())
+        self.assertNotEqual(self.invalid_form_no_direction.errors, {})
+        self.assertEqual(
+            self.invalid_form_no_direction.errors["direction"],
+            ["This field is required."],
+        )
+
+    def test_invalid_form_no_source_text(self):
+        self.assertFalse(self.invalid_form_no_source_text.is_valid())
+        self.assertNotEqual(self.invalid_form_no_source_text.errors, {})
+        self.assertEqual(
+            self.invalid_form_no_source_text.errors["source_text"],
+            ["This field is required."],
+        )
