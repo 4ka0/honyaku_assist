@@ -3,13 +3,13 @@
 {% block content %}
 
     <p class="mb-3">Source text ({{ source_lang|upper }}):
-        <div class="alert alert-primary" role="alert">
+        <div class="alert alert-light" role="alert">
             {{ source_text }}
         </div>
     </p>
 
     <p class="mb-3">Machine output ({{ target_lang|upper }}):
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-light" role="alert">
             {{ deepl_result }}
         </div>
     </p>

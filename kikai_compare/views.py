@@ -42,9 +42,9 @@ def output_page_view(request):
 
 def translation_direction(direction):
     if direction == "Ja>En":
-        return "ja", "en-us"
+        return "ja", "en"
     else:
-        return "en-us", "ja"
+        return "en", "ja"
 
 
 def call_deepl_api(source_text, source_lang, target_lang):
@@ -52,6 +52,10 @@ def call_deepl_api(source_text, source_lang, target_lang):
     env.read_env()
     auth_key = env.str("DEEPL_AUTH_KEY")
     translator = deepl.Translator(auth_key)
+
+    if target_lang == "en":
+        target_lang = "en-us"
+
     deepl_result = translator.translate_text(
                 source_text,
                 source_lang=source_lang,
