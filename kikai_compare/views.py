@@ -19,7 +19,7 @@ def input_page_view(request):
             source_lang, target_lang = translation_direction(direction)
 
             # Get translation results
-            deepl_result = call_deepl_api(source_text, source_lang, target_lang)
+            deepl_result, deepl_usage = call_deepl_api(source_text, source_lang, target_lang)
 
             return render(
                 request,
@@ -29,15 +29,12 @@ def input_page_view(request):
                     "source_lang": source_lang,
                     "target_lang": target_lang,
                     "deepl_result": deepl_result,
+                    "deepl_usage": deepl_usage,
                 },
             )
     else:
         form = InputForm()
     return render(request, 'input.html', {'form': form})
-
-
-def output_page_view(request):
-    return render(request, 'output.html')
 
 
 def translation_direction(direction):
@@ -56,10 +53,13 @@ def call_deepl_api(source_text, source_lang, target_lang):
     if target_lang == "en":
         target_lang = "en-us"
 
-    deepl_result = translator.translate_text(
+    result = translator.translate_text(
                 source_text,
                 source_lang=source_lang,
                 target_lang=target_lang,
                 glossary=None,
             )
-    return deepl_result
+
+    usage = translator.get_usage()
+
+    return result, usage
