@@ -2,16 +2,16 @@
 
 {% block content %}
 
-    <p class="mb-3">Source text ({{ source_lang|upper }}):
-        <div class="alert alert-light" role="alert">
+    <p class="mb-3">Source text ({{ source_lang|upper }})
+        <div class="alert alert-warning" role="alert">
             {{ source_text }}
         </div>
     </p>
 
-    <p class="mb-3">Machine output ({{ target_lang|upper }}):
-        <div class="alert alert-light" role="alert">
-            {{ deepl_result }}
-        </div>
+    <p class="mb-3">
+        DeepL result ({{ target_lang|upper }})
+        <span class="small text-muted">({{ deepl_usage }})</span>
+        <div class="alert alert-info" role="alert">{{ deepl_result }}</div>
     </p>
 
     <div class="text-center my-4">
