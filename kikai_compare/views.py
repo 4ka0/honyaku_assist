@@ -20,6 +20,7 @@ def input_page_view(request):
 
             # Get translation results
             deepl_result, deepl_usage = call_deepl_api(source_text, source_lang, target_lang)
+            google_result, google_usage = call_google_api(source_text, source_lang, target_lang)
 
             return render(
                 request,
@@ -30,6 +31,8 @@ def input_page_view(request):
                     "target_lang": target_lang,
                     "deepl_result": deepl_result,
                     "deepl_usage": deepl_usage,
+                    "google_result": google_result,
+                    "google_usage": google_usage,
                 },
             )
     else:
@@ -62,4 +65,10 @@ def call_deepl_api(source_text, source_lang, target_lang):
 
     usage = translator.get_usage()
 
+    return result, usage
+
+
+def call_google_api(source_text, source_lang, target_lang):
+    result = "Dummy text"
+    usage = 500
     return result, usage
