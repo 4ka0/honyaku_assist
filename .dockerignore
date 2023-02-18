@@ -1,3 +1,4 @@
 .venv
 .git
 .gitignore
+google-translate-service-account.json
