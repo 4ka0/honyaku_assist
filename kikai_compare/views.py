@@ -1,9 +1,12 @@
 from django.shortcuts import render
+from django.conf import settings
 
 from .forms import InputForm
 
 from environs import Env
 import deepl
+from google.cloud import translate_v2 as translate
+from google.oauth2 import service_account
 
 
 def input_page_view(request):
@@ -20,7 +23,7 @@ def input_page_view(request):
 
             # Get translation results
             deepl_result, deepl_usage = call_deepl_api(source_text, source_lang, target_lang)
-            google_result, google_usage = call_google_api(source_text, source_lang, target_lang)
+            google_result = call_google_api(source_text, source_lang, target_lang)
 
             return render(
                 request,
@@ -32,7 +35,6 @@ def input_page_view(request):
                     "deepl_result": deepl_result,
                     "deepl_usage": deepl_usage,
                     "google_result": google_result,
-                    "google_usage": google_usage,
                 },
             )
     else:
@@ -48,9 +50,11 @@ def translation_direction(direction):
 
 
 def call_deepl_api(source_text, source_lang, target_lang):
+
     env = Env()
     env.read_env()
     auth_key = env.str("DEEPL_AUTH_KEY")
+
     translator = deepl.Translator(auth_key)
 
     if target_lang == "en":
@@ -69,6 +73,22 @@ def call_deepl_api(source_text, source_lang, target_lang):
 
 
 def call_google_api(source_text, source_lang, target_lang):
-    result = "Dummy text"
-    usage = 500
-    return result, usage
+
+    env = Env()
+    env.read_env()
+
+    google_service_account_key = str(settings.BASE_DIR.joinpath(env.str("GOOGLE_CREDENTIALS")))
+
+    credentials = service_account.Credentials.from_service_account_file(
+        google_service_account_key
+    )
+
+    translate_client = translate.Client(credentials=credentials)
+
+    result = translate_client.translate(
+        source_text,
+        source_language=source_lang,
+        target_language=target_lang,
+    )
+
+    return result["translatedText"]
