@@ -17,7 +17,7 @@
     <p class="mb-3">
         Google result ({{ target_lang|upper }})
         <span class="small text-muted">({{ google_usage }})</span>
-        <div class="alert alert-info" role="alert">{{ google_result }}</div>
+        <div class="alert alert-info" role="alert">{{ google_result|safe }}</div>
     </p>
 
     <div class="text-center my-4">
