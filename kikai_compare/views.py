@@ -33,7 +33,8 @@ def input_page_view(request):
                     "source_lang": source_lang,
                     "target_lang": target_lang,
                     "deepl_result": deepl_result,
-                    "deepl_usage": deepl_usage,
+                    "deepl_usage": deepl_usage.character.count,
+                    "deepl_limit": deepl_usage.character.limit,
                     "google_result": google_result,
                 },
             )
