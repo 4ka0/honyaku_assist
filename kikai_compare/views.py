@@ -25,7 +25,7 @@ def input_page_view(request):
             # Get translation results
             deepl_result, deepl_usage = call_deepl_api(source_text, source_lang, target_lang)
             deepl_result_length = len(str(deepl_result))
-            
+
             google_result = call_google_api(source_text, source_lang, target_lang)
             google_result_length = len(google_result)
 
