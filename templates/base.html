@@ -22,10 +22,12 @@
                 <div class="row">
                     <div class="col bg-light px-5 pt-4 pb-5">
 
-                        <div class="text-center mt-4 mb-5">
-                            <h2 class="mb-3">Honyaku Assist</h2>
-                            <p>A machine translation assistant for those with translator's block.</p>
-                        </div>
+                        <nav class="navbar navbar-light mb-5 justify-content-center">
+                            <a class="navbar-brand" href="{% url 'input' %}">Honyaku Assist</a>
+                            <span class="navbar-text">
+                                A machine translation assistant for humans suffering from temporary translator's block
+                            </span>
+                        </nav>
 
                         {% block content %}
                         {% endblock %}

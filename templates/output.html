@@ -3,8 +3,10 @@
 
 {% block content %}
 
+    <h3 class="text-center mb-3">Results</h3>
+
     <p class="mb-3">Source text ({{ source_lang|upper }})
-        <div class="alert alert-warning" role="alert">
+        <div class="alert alert-info" role="alert">
             {{ source_text }}
         </div>
     </p>
@@ -14,7 +16,7 @@
         <span class="small text-muted">
             (Usage: {{ deepl_usage|intcomma }} / {{ deepl_limit|intcomma }} characters this month)
         </span>
-        <div class="alert alert-info" role="alert">{{ deepl_result }}</div>
+        <div class="alert alert-success" role="alert">{{ deepl_result }}</div>
     </p>
 
     <p class="mb-3">
@@ -22,7 +24,7 @@
         <span class="small text-muted">
             (Usage: {{ google_usage|intcomma }} / 500,000 characters this month)
         </span>
-        <div class="alert alert-info" role="alert">{{ google_result|safe }}</div>
+        <div class="alert alert-success" role="alert">{{ google_result|safe }}</div>
     </p>
 
     <div class="text-center my-4">
