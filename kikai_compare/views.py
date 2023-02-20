@@ -5,6 +5,7 @@ from .forms import InputForm
 
 from environs import Env
 import deepl
+from deepl.exceptions import DeepLException
 from google.cloud import translate_v2 as translate
 from google.oauth2 import service_account
 
@@ -39,8 +40,7 @@ def input_page_view(request):
                     "target_lang": target_lang,
                     "deepl_result": deepl_result,
                     "deepl_result_length": deepl_result_length,
-                    "deepl_usage": deepl_usage.character.count,
-                    "deepl_limit": deepl_usage.character.limit,
+                    "deepl_usage": deepl_usage,
                     "google_result": google_result,
                     "google_result_length": google_result_length,
                 },
@@ -59,25 +59,46 @@ def translation_direction(direction):
 
 def call_deepl_api(source_text, source_lang, target_lang):
 
+    # Authenticate DeepL
+
     env = Env()
     env.read_env()
-    auth_key = env.str("DEEPL_AUTH_KEY")
+    try:
+        translator = deepl.Translator(env.str("DEEPL_AUTH_KEY"))
+    except DeepLException as e:
+        result = "DeepL Error: " + str(e)
+        usage = "Error"
+        return result, usage
 
-    translator = deepl.Translator(auth_key)
+    # Get DeepL result
 
+    # DeepL does not accept "en" as a target language code.
+    # Has to be either "en-us" or "en-gb".
     if target_lang == "en":
         target_lang = "en-us"
 
-    result = translator.translate_text(
-                source_text,
-                source_lang=source_lang,
-                target_lang=target_lang,
-                glossary=None,
-            )
+    try:
+        result = translator.translate_text(
+                    source_text,
+                    source_lang=source_lang,
+                    target_lang=target_lang,
+                    glossary=None,
+                )
+    except DeepLException as e:
+        result = "DeepL Error: " + str(e)
+        usage = "Error"
+        return result, usage
 
-    usage = translator.get_usage()
+    # Get current DeepL usage
 
-    return result, usage
+    try:
+        usage = translator.get_usage()
+    except DeepLException as e:
+        result = f"{result}\n(DeepL Error: {str(e)}"
+        usage = "Error"
+        return result, usage
+
+    return result, usage.character.count
 
 
 def call_google_api(source_text, source_lang, target_lang):

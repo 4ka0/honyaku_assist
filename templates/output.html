@@ -14,10 +14,12 @@
 
     <p class="mb-3">
         DeepL result ({{ target_lang|upper }})
-        <span class="small text-muted">
-            (No. of characters: {{ deepl_result_length|intcomma }})
-            (Current usage: {{ deepl_usage|intcomma }} / {{ deepl_limit|intcomma }} characters this month)
-        </span>
+        {% if deepl_usage != "Error" %}
+            <span class="small text-muted">
+                (No. of characters: {{ deepl_result_length|intcomma }})
+                (Current usage: {{ deepl_usage|intcomma }} / 500,000 characters this month)
+            </span>
+        {% endif %}
         <div class="alert alert-primary" role="alert">{{ deepl_result }}</div>
     </p>
 
