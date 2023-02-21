@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.forms.widgets import Textarea, RadioSelect
 
-from .forms import InputForm
+from ..forms import InputForm
 
 
 class TestInputForm(TestCase):
@@ -77,7 +77,7 @@ class TestInputForm(TestCase):
         self.assertTrue(self.empty_form.fields['source_text'].strip)
 
     # Test submission of valid forms
-    
+
     def test_valid_form_ja_en(self):
         self.assertTrue(self.valid_form_ja_en.is_bound)
         self.assertTrue(self.valid_form_ja_en.is_valid())
