@@ -7,10 +7,9 @@ from environs import Env
 import deepl
 from deepl.exceptions import DeepLException
 
-# from google.cloud import translate_v2 as translate
-from google.cloud import translate
-
 from google.oauth2 import service_account
+# from google.cloud import translate_v2 as translate  # For the basic API (v2)
+from google.cloud import translate  # For the advanced API (v3)
 
 
 def input_page_view(request):
@@ -30,7 +29,7 @@ def input_page_view(request):
             deepl_result, deepl_usage = call_deepl_api(source_text, source_lang, target_lang)
             deepl_result_length = len(str(deepl_result))
 
-            google_result = call_google_api(source_text, source_lang, target_lang)
+            google_result = call_google_api_v3(source_text, source_lang, target_lang)
             google_result_length = len(google_result)
 
             return render(
@@ -104,8 +103,55 @@ def call_deepl_api(source_text, source_lang, target_lang):
     return result, usage.character.count
 
 
+def call_google_api_v3(source_text, source_lang, target_lang):
+    """
+    Method for calling the Google Translate API.
+    Uses the Cloud Translation Advanced API (v3).
+    """
+
+    env = Env()
+    env.read_env()
+
+    # Authenticate
+
+    service_account_key = str(settings.BASE_DIR.joinpath(env.str("GOOGLE_PROJECT_CREDENTIALS")))
+
+    credentials = service_account.Credentials.from_service_account_file(
+        service_account_key
+    )
+
+    # Translate
+
+    try:
+        client = translate.TranslationServiceClient(credentials=credentials)
+    except Exception as e:
+        return "Google Error: " + str(e)
+
+    project_id = env.str("GOOGLE_PROJECT_ID")
+    location = "global"
+    parent = f"projects/{project_id}/locations/{location}"
+
+    try:
+        response = client.translate_text(
+            request={
+                "parent": parent,
+                "contents": [source_text],
+                "mime_type": "text/plain",  # mime types: text/plain, text/html
+                "source_language_code": source_lang,
+                "target_language_code": target_lang,
+            }
+        )
+    except Exception as e:
+        return "Google Error: " + str(e)
+
+    if response.translations[0].translated_text:
+        return response.translations[0].translated_text
+
+    return "Error in translation response from Google."
+
+
 '''
-def call_google_api(source_text, source_lang, target_lang):
+def call_google_api_v2(source_text, source_lang, target_lang):
     """
     Method for calling the Google Translate API.
     Uses the Cloud Translation Basic API (v2).
@@ -130,46 +176,3 @@ def call_google_api(source_text, source_lang, target_lang):
 
     return result["translatedText"]
 '''
-
-
-def call_google_api(source_text, source_lang, target_lang):
-    """
-    Method for calling the Google Translate API.
-    Uses the Cloud Translation Advanced API (v3).
-    """
-
-    env = Env()
-    env.read_env()
-
-    # Authenticate
-
-    service_account_key = str(settings.BASE_DIR.joinpath(env.str("GOOGLE_PROJECT_CREDENTIALS")))
-
-    credentials = service_account.Credentials.from_service_account_file(
-        service_account_key
-    )
-
-    # Translate
-
-    client = translate.TranslationServiceClient(credentials=credentials)
-
-    project_id = env.str("GOOGLE_PROJECT_ID")
-    location = "global"
-    parent = f"projects/{project_id}/locations/{location}"
-
-    response = client.translate_text(
-        request={
-            "parent": parent,
-            "contents": [source_text],
-            "mime_type": "text/plain",  # mime types: text/plain, text/html
-            "source_language_code": source_lang,
-            "target_language_code": target_lang,
-        }
-    )
-
-    # The above returns a dict containing a translation for each input text.
-    # Below is an example when only one input text provided.
-    # [translated_text: "axial direction"]
-    # It doesn't seem robust to simply use [0]
-
-    return response.translations[0].translated_text
