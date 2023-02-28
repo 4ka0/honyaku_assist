@@ -61,42 +61,31 @@ def translation_direction(direction):
 
 def call_deepl_api(source_text, source_lang, target_lang):
 
-    # Authenticate DeepL
-
     env = Env()
     env.read_env()
+
     try:
+        # Authenticate
         translator = deepl.Translator(env.str("DEEPL_AUTH_KEY"))
-    except DeepLException as e:
-        result = "DeepL Error: " + str(e)
-        usage = "Error"
-        return result, usage
 
-    # Get DeepL result
+        # DeepL does not accept "en" as a target language code.
+        # Has to be either "en-us" or "en-gb".
+        if target_lang == "en":
+            target_lang = "en-us"
 
-    # DeepL does not accept "en" as a target language code.
-    # Has to be either "en-us" or "en-gb".
-    if target_lang == "en":
-        target_lang = "en-us"
-
-    try:
+        # Get translation
         result = translator.translate_text(
-                    source_text,
-                    source_lang=source_lang,
-                    target_lang=target_lang,
-                    glossary=None,
-                )
+                source_text,
+                source_lang=source_lang,
+                target_lang=target_lang,
+                glossary=None,
+            )
+
+        # Get current usage
+        usage = translator.get_usage()
+
     except DeepLException as e:
         result = "DeepL Error: " + str(e)
-        usage = "Error"
-        return result, usage
-
-    # Get current DeepL usage
-
-    try:
-        usage = translator.get_usage()
-    except DeepLException as e:
-        result = f"{result}\n(DeepL Error: {str(e)}"
         usage = "Error"
         return result, usage
 
