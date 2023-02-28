@@ -103,26 +103,23 @@ def call_google_api_v3(source_text, source_lang, target_lang):
     env = Env()
     env.read_env()
 
-    # Authenticate
-
-    service_account_key = str(settings.BASE_DIR.joinpath(env.str("GOOGLE_PROJECT_CREDENTIALS")))
-
-    credentials = service_account.Credentials.from_service_account_file(
-        service_account_key
-    )
-
-    # Translate
-
     try:
+        # Authenticate
+
+        service_account_key = str(settings.BASE_DIR.joinpath(env.str("GOOGLE_PROJECT_CREDENTIALS")))
+
+        credentials = service_account.Credentials.from_service_account_file(
+            service_account_key
+        )
+
         client = translate.TranslationServiceClient(credentials=credentials)
-    except Exception as e:
-        return "Google Error: " + str(e)
 
-    project_id = env.str("GOOGLE_PROJECT_ID")
-    location = "global"
-    parent = f"projects/{project_id}/locations/{location}"
+        # Translate
 
-    try:
+        project_id = env.str("GOOGLE_PROJECT_ID")
+        location = "global"
+        parent = f"projects/{project_id}/locations/{location}"
+
         response = client.translate_text(
             request={
                 "parent": parent,
@@ -132,13 +129,16 @@ def call_google_api_v3(source_text, source_lang, target_lang):
                 "target_language_code": target_lang,
             }
         )
+
+        if response.translations[0].translated_text:
+            result = response.translations[0].translated_text
+        else:
+            result = "(Error: Translation not included in response from Google)"
+
     except Exception as e:
-        return "Google Error: " + str(e)
+        result = "(Error: " + str(e) + ")"
 
-    if response.translations[0].translated_text:
-        return response.translations[0].translated_text
-
-    return "Error in translation response from Google."
+    return result
 
 
 '''
