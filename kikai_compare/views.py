@@ -63,6 +63,7 @@ def call_deepl_api(source_text, source_lang, target_lang):
 
     env = Env()
     env.read_env()
+    result = ""
 
     try:
         # Authenticate
@@ -82,14 +83,15 @@ def call_deepl_api(source_text, source_lang, target_lang):
             )
 
         # Get current usage
-        usage = translator.get_usage()
+        usage_obj = translator.get_usage()
+        usage = usage_obj.character.count
 
     except DeepLException as e:
-        result = "DeepL Error: " + str(e)
-        usage = "Error"
-        return result, usage
+        if not result:
+            result = "(Error: " + str(e) + ")"
+        usage = "(Error)"
 
-    return result, usage.character.count
+    return result, usage
 
 
 def call_google_api_v3(source_text, source_lang, target_lang):
