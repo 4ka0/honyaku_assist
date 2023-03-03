@@ -6,6 +6,7 @@ services:
     command: gunicorn core.wsgi --bind 0.0.0.0:8000
     volumes:
       - .:/code
+      - static_volume:/code/staticfiles
     expose:
       - 8000
     depends_on:
@@ -18,6 +19,8 @@ services:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
   nginx:
     build: ./nginx
+    volumes:
+      - static_volume:/code/staticfiles
     ports:
       - 1337:80
     depends_on:
@@ -25,3 +28,4 @@ services:
 
 volumes:
   postgres_data:
+  static_volume:
