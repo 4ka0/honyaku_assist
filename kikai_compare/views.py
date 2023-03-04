@@ -53,28 +53,31 @@ def input_page_view(request):
 
 
 def translation_direction(direction):
+    """
+    Method to determine the direction of the translation to be performed.
+    DeepL does not accept "en" as a target language code (has to be either
+    "en-us" or "en-gb"). "en-us" is set here.
+    """
+
     if direction == "Ja>En":
-        return "ja", "en"
+        return "ja", "en-us"
     else:
-        return "en", "ja"
+        return "en-us", "ja"
 
 
 def call_deepl_api(source_text, source_lang, target_lang):
 
     env = Env()
     env.read_env()
+
     result = ""
+    usage = ""
 
     try:
-        # Authenticate
+        # DeepL call to authenticate
         translator = deepl.Translator(env.str("DEEPL_AUTH_KEY"))
 
-        # DeepL does not accept "en" as a target language code.
-        # Has to be either "en-us" or "en-gb".
-        if target_lang == "en":
-            target_lang = "en-us"
-
-        # Get translation
+        # DeepL call to get translation
         result = translator.translate_text(
                 source_text,
                 source_lang=source_lang,
@@ -82,14 +85,25 @@ def call_deepl_api(source_text, source_lang, target_lang):
                 glossary=None,
             )
 
-        # Get current usage
+        # DeepL call to get current usage
         usage_obj = translator.get_usage()
         usage = usage_obj.character.count
 
     except DeepLException as e:
-        if not result:
+        if result:
+            result = result + "\n(DeepL Error: " + str(e) + ")"
+        else:
+            result = "(DeepL Error: " + str(e) + ")"
+        if not usage:
+            usage = "(Error)"
+
+    except Exception as e:
+        if result:
+            result = result + "(Error: " + str(e) + ")"
+        else:
             result = "(Error: " + str(e) + ")"
-        usage = "(Error)"
+        if not usage:
+            usage = "(Error)"
 
     return result, usage
 
