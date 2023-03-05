@@ -4,39 +4,42 @@ from django.test import SimpleTestCase
 from deepl import translator
 
 
-class TestInputPageView(SimpleTestCase):
+class TestHomepage(SimpleTestCase):
 
-    def test_input_page_exists_at_desired_url(self):
+    def test_home_page_exists_at_desired_url(self):
         response = self.client.get('')
         self.assertEqual(response.status_code, 200)
 
-    def test_input_page_accessible_by_name(self):
-        response = self.client.get(reverse('input'))
+    def test_home_page_accessible_by_name(self):
+        response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
 
-    def test_input_page_uses_correct_template(self):
-        response = self.client.get(reverse('input'))
+    def test_home_page_uses_correct_template(self):
+        response = self.client.get(reverse('home'))
         self.assertTemplateUsed(response, 'base.html')
         self.assertTemplateUsed(response, 'input.html')
 
-    def test_input_page_title_and_navbar_content(self):
-        response = self.client.get(reverse('input'))
+    def test_home_page_title_and_navbar_content(self):
+        response = self.client.get(reverse('home'))
         self.assertContains(response, '<title>Honyaku Assist</title>')
 
-    def test_input_page_navbar_content(self):
-        response = self.client.get(reverse('input'))
+    def test_home_page_navbar_content(self):
+        response = self.client.get(reverse('home'))
         self.assertContains(response, '<a class="navbar-brand" href="/">Honyaku Assist</a>')
         self.assertContains(response, '<span class="navbar-text">A machine translation assistant for')
 
-    def test_input_page_form_content(self):
-        response = self.client.get(reverse('input'))
+    def test_home_page_form_content(self):
+        response = self.client.get(reverse('home'))
         self.assertContains(response, 'Japanese to English')
         self.assertContains(response, 'English to Japanese')
         self.assertContains(response, 'Translate</button>')
 
+
+class TestOutput(SimpleTestCase):
+
     def test_output_page_context(self):
         response = self.client.post(
-            reverse('input'),
+            reverse('home'),
             {'direction': 'Ja>En', 'source_text': '花粉飛散情報',}
         )
 
@@ -58,7 +61,7 @@ class TestInputPageView(SimpleTestCase):
 
     def test_output_page_content(self):
         response = self.client.post(
-            reverse('input'),
+            reverse('home'),
             {'direction': 'Ja>En', 'source_text': '花粉飛散情報',}
         )
 
@@ -71,6 +74,17 @@ class TestInputPageView(SimpleTestCase):
         # print('**********')
 
         self.assertEqual(response.status_code, 200)
+
+        self.assertTemplateUsed(response, 'base.html')
+        self.assertTemplateUsed(response, 'output.html')
+
         self.assertContains(response, 'Source text (JA)')
         self.assertContains(response, 'DeepL result (EN-US)')
         self.assertContains(response, 'Google result (EN-US)')
+
+    def test_deep_api_exceptions(self):
+        # Test exception is raised.
+        # Test error message included in output.html.
+        # Example, when en-us is set as the source language code:
+        # (DeepL Error: Bad request, message: Value for 'source_lang' not supported.)
+        pass
