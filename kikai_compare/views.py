@@ -12,7 +12,13 @@ from google.oauth2 import service_account
 from google.cloud import translate  # For the advanced API (v3)
 
 
-def input_page_view(request):
+def homepage_view(request):
+    """
+    View for the homepage. Basically displays either:
+    (1) a form to receive the source text to be translated from the user, or
+    (2) the translation results received from the DeepL and Google APIs.
+    """
+
     if request.method == 'POST':
         form = InputForm(request.POST)
         if form.is_valid():
@@ -55,17 +61,23 @@ def input_page_view(request):
 def translation_direction(direction):
     """
     Method to determine the direction of the translation to be performed.
-    DeepL does not accept "en" as a target language code (has to be either
-    "en-us" or "en-gb"). "en-us" is set here.
+    DeepL accepts "en" as a source language code but not as a target language
+    code (has to be either "en-us" or "en-gb"). "en-us" is set here.
     """
 
     if direction == "Ja>En":
         return "ja", "en-us"
     else:
-        return "en-us", "ja"
+        return "en", "ja"
 
 
 def call_deepl_api(source_text, source_lang, target_lang):
+    """
+    Method for calling the DeepL API.
+    Returns:
+    result (str): the translation obtained from DeepL
+    usage (int): current monthly usage according to DeepL
+    """
 
     env = Env()
     env.read_env()
@@ -112,6 +124,8 @@ def call_google_api_v3(source_text, source_lang, target_lang):
     """
     Method for calling the Google Translate API.
     Uses the Cloud Translation Advanced API (v3).
+    Returns:
+    result (str): the translation obtained from Google
     """
 
     env = Env()
