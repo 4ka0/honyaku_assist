@@ -26,61 +26,68 @@ class TestHomepage(SimpleTestCase):
     def test_home_page_navbar_content(self):
         response = self.client.get(reverse('home'))
         self.assertContains(response, '<a class="navbar-brand" href="/">Honyaku Assist</a>')
-        self.assertContains(response, '<span class="navbar-text">A machine translation assistant for')
+        self.assertContains(
+            response,
+            '<span class="navbar-text">A machine translation assistant for'
+        )
 
     def test_home_page_form_content(self):
         response = self.client.get(reverse('home'))
         self.assertContains(response, 'Japanese to English')
         self.assertContains(response, 'English to Japanese')
-        self.assertContains(response, 'Translate</button>')
+        self.assertContains(
+            response,
+            '<button type="submit" class="btn btn-primary mt-2">Translate</button>'
+        )
 
 
 class TestOutput(SimpleTestCase):
 
-    def test_output_page_context(self):
-        response = self.client.post(
+    def setUp(self):
+        self.valid_data_response = self.client.post(
             reverse('home'),
             {'direction': 'Ja>En', 'source_text': '花粉飛散情報',}
         )
 
-        self.assertEqual(response.context['source_lang'], 'ja')
-        self.assertEqual(response.context['target_lang'], 'en-us')
-        self.assertEqual(response.context['source_text'], '花粉飛散情報')
-        self.assertEqual(response.context['source_text_length'], 6)
+    def test_output_page_status_code_with_valid_data(self):
+        self.assertEqual(self.valid_data_response.status_code, 200)
 
-        self.assertIsInstance(response.context['deepl_result'], translator.TextResult)
-        self.assertIsInstance(response.context['deepl_result_length'], int)
-        self.assertGreater(response.context['deepl_result_length'], 0)
-        self.assertIsInstance(response.context['deepl_usage'], int)
-        self.assertGreater(response.context['deepl_usage'], 0)
+    def test_output_page_basic_context_data_with_valid_data(self):
+        self.assertEqual(self.valid_data_response.context['source_lang'], 'ja')
+        self.assertEqual(self.valid_data_response.context['target_lang'], 'en-us')
+        self.assertEqual(self.valid_data_response.context['source_text'], '花粉飛散情報')
+        self.assertEqual(self.valid_data_response.context['source_text_length'], 6)
 
-        self.assertIsInstance(response.context['google_result'], str)
-        self.assertGreater(len(response.context['google_result']), 0)
-        self.assertIsInstance(response.context['google_result_length'], int)
-        self.assertGreater(response.context['google_result_length'], 0)
-
-    def test_output_page_content(self):
-        response = self.client.post(
-            reverse('home'),
-            {'direction': 'Ja>En', 'source_text': '花粉飛散情報',}
+    def test_output_page_deepl_context_data_with_valid_data(self):
+        self.assertIsInstance(
+            self.valid_data_response.context['deepl_result'],
+            translator.TextResult
         )
+        self.assertIsInstance(self.valid_data_response.context['deepl_result_length'], int)
+        self.assertGreater(self.valid_data_response.context['deepl_result_length'], 0)
+        self.assertIsInstance(self.valid_data_response.context['deepl_usage'], int)
+        self.assertGreater(self.valid_data_response.context['deepl_usage'], 0)
 
-        # print('\n**********')
-        # print(response)
-        # print('**********')
-        # print(response.content)
-        # print('**********')
-        # print(response.context)
-        # print('**********')
+    def test_output_page_google_context_data_with_valid_data(self):
+        self.assertIsInstance(self.valid_data_response.context['google_result'], str)
+        self.assertGreater(len(self.valid_data_response.context['google_result']), 0)
+        self.assertIsInstance(self.valid_data_response.context['google_result_length'], int)
+        self.assertGreater(self.valid_data_response.context['google_result_length'], 0)
 
-        self.assertEqual(response.status_code, 200)
+    def test_output_page_with_valid_data_status_code(self):
+        self.assertEqual(self.valid_data_response.status_code, 200)
 
-        self.assertTemplateUsed(response, 'base.html')
-        self.assertTemplateUsed(response, 'output.html')
+    def test_output_page_with_valid_data_templates_used(self):
+        self.assertTemplateUsed(self.valid_data_response, 'base.html')
+        self.assertTemplateUsed(self.valid_data_response, 'output.html')
 
-        self.assertContains(response, 'Source text (JA)')
-        self.assertContains(response, 'DeepL result (EN-US)')
-        self.assertContains(response, 'Google result (EN-US)')
+    def test_output_page_with_valid_data_page_content(self):
+        self.assertContains(self.valid_data_response, 'Source text (JA)')
+        self.assertContains(self.valid_data_response, '(No. of characters: 6)')
+        self.assertContains(self.valid_data_response, 'DeepL result (EN-US)')
+        self.assertContains(self.valid_data_response, 'Google result (EN-US)')
+        # Add tests to show mocked results from DeepL and Google are included in the output page
+        # Tests are slow because each method is making real calls to the APIs
 
     def test_deep_api_exceptions(self):
         # Test exception is raised.
