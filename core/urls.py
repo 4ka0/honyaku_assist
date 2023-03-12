@@ -4,5 +4,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('kikai_compare.urls')),
+    path('', include('honyaku_assist.urls')),
 ]

@@ -54,8 +54,8 @@ class TestOutput(SimpleTestCase):
         """
 
         # The below mocks the calls to the DeepL and Google APIs.
-        with patch('kikai_compare.views.call_deepl_api') as mock_deepl_call, \
-            patch('kikai_compare.views.call_google_api_v3') as mock_google_call:
+        with patch('honyaku_assist.views.call_deepl_api') as mock_deepl_call, \
+            patch('honyaku_assist.views.call_google_api_v3') as mock_google_call:
 
             # Mock the values returned by call_deepl_api() in the view.
             deepl_result, deepl_usage = 'Pollen dispersal information', 6

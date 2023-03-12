@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class KikaiCompareConfig(AppConfig):
+class HonyakuAssistConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'kikai_compare'
+    name = 'honyaku_assist'
