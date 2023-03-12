@@ -1,12 +1,7 @@
-import requests
 from unittest.mock import patch
 
 from django.urls import reverse
 from django.test import SimpleTestCase
-
-from deepl import translator
-
-from ..views import call_deepl_api
 
 
 class TestHomepage(SimpleTestCase):
@@ -98,26 +93,25 @@ class TestOutput(SimpleTestCase):
         self.assertEqual(self.response.context['google_result'], 'Pollen dispersion information')
         self.assertEqual(self.response.context['google_result_length'], 29)
 
-    """
-    def test_output_page_with_valid_data_status_code(self):
-        self.assertEqual(self.mocked_response.status_code, 200)
+    def test_output_page_templates_used(self):
+        self.assertTemplateUsed(self.response, 'base.html')
+        self.assertTemplateUsed(self.response, 'output.html')
 
-    def test_output_page_with_valid_data_templates_used(self):
-        self.assertTemplateUsed(self.mocked_response, 'base.html')
-        self.assertTemplateUsed(self.mocked_response, 'output.html')
+    def test_output_page_content(self):
+        self.assertContains(self.response, 'Source text (JA)')
+        self.assertContains(self.response, '(No. of characters: 6)')
+        self.assertContains(self.response, 'DeepL result (EN-US)')
+        self.assertContains(self.response, 'Pollen dispersal information')
+        self.assertContains(self.response, 'Google result (EN-US)')
+        self.assertContains(self.response, 'Pollen dispersion information')
 
-    def test_output_page_with_valid_data_page_content(self):
-        self.assertContains(self.mocked_response, 'Source text (JA)')
-        self.assertContains(self.mocked_response, '(No. of characters: 6)')
-        self.assertContains(self.mocked_response, 'DeepL result (EN-US)')
-        self.assertContains(self.mocked_response, 'Google result (EN-US)')
-        # Add tests to show mocked results from DeepL and Google are included in the output page
-        # Tests are slow because each method is making real calls to the APIs
-
-    def test_deep_api_exceptions(self):
-        # Test exception is raised.
-        # Test error message included in output.html.
+    def test_deep_api_exception_handling(self):
+        # When exception is raised, test that error message included in output.html.
+        # Need to do this with real (unmocked) API calls.
         # Example, when en-us is set as the source language code:
         # (DeepL Error: Bad request, message: Value for 'source_lang' not supported.)
         pass
-    """
+
+    def test_google_api_exception_handling(self):
+        # Same as above, except for the Google API.
+        pass
