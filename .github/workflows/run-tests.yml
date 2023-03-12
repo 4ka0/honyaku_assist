@@ -1,5 +1,7 @@
 name: Run tests
 on: push
+env:
+  SECRET_KEY: ${{secrets.SECRET_KEY}}
 jobs:
   execute_tests:
     name: Install requirements and execute tests
