@@ -14,6 +14,4 @@ jobs:
       - name: Install requirements
         run: pip install -r requirements.txt
       - name: Execute tests
-        env:
-          DJANGO_SETTINGS_MODULE: core.settings
         run: python manage.py test
