@@ -88,12 +88,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": env.str('DB-ENGINE'),
-        "NAME": env.str('DB-NAME'),
-        "USER": env.str('DB-USER'),
-        "PASSWORD": env.str('DB-PASSWORD'),
-        "HOST": env.str('DB-HOST'),
-        "PORT": env.int('DB-PORT'),
+        "ENGINE": env.str('DB_ENGINE'),
+        "NAME": env.str('DB_NAME'),
+        "USER": env.str('DB_USER'),
+        "PASSWORD": env.str('DB_PASSWORD'),
+        "HOST": env.str('DB_HOST'),
+        "PORT": env.int('DB_PORT'),
     }
 }
 
