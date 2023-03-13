@@ -2,6 +2,18 @@ name: Run tests
 on: push
 env:
   SECRET_KEY: ${{secrets.SECRET_KEY}}
+  DEBUG: ${{secrets.DEBUG}}
+  ALLOWED_HOSTS: ${{secrets.ALLOWED_HOSTS}}
+  CSRF_TRUSTED_ORIGINS: ${{secrets.CSRF_TRUSTED_ORIGINS}}
+  DB_ENGINE: ${{secrets.DB_ENGINE}}
+  DB_NAME: ${{secrets.DB_NAME}}
+  DB_USER: ${{secrets.DB_USER}}
+  DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+  DB_HOST: ${{secrets.DB_HOST}}
+  DB_PORT: ${{secrets.DB_PORT}}
+  DEEPL_AUTH_KEY: ${{secrets.DEEPL_AUTH_KEY}}
+  GOOGLE_PROJECT_CREDENTIALS: ${{secrets.GOOGLE_PROJECT_CREDENTIALS}}
+  GOOGLE_PROJECT_ID: ${{secrets.GOOGLE_PROJECT_ID}}
 jobs:
   execute_tests:
     name: Install requirements and execute tests
