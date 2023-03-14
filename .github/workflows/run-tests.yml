@@ -12,9 +12,9 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-      - name: Set up Python
-        run: actions/setup-python@v4
+      - name: Install pip
+        run: sudo apt install python3-pip
       - name: Install requirements
         run: pip install -r requirements.txt
       - name: Execute tests
-        run: python manage.py test --settings=core.settings_github_tests
+        run: python manage.py test --settings=core.settings_github_test
