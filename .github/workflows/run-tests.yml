@@ -17,4 +17,4 @@ jobs:
       - name: Install requirements
         run: pip install -r requirements.txt
       - name: Execute tests
-        run: python manage.py test --settings=core.settings_github_tests
+        run: python manage.py test -v 2 --settings=core.settings_github_tests
