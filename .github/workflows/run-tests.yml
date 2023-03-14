@@ -5,12 +5,6 @@ env:
   DEBUG: ${{secrets.DEBUG}}
   ALLOWED_HOSTS: ${{secrets.ALLOWED_HOSTS}}
   CSRF_TRUSTED_ORIGINS: ${{secrets.CSRF_TRUSTED_ORIGINS}}
-  DB_ENGINE: ${{secrets.DB_ENGINE}}
-  DB_NAME: ${{secrets.DB_NAME}}
-  DB_USER: ${{secrets.DB_USER}}
-  DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-  DB_HOST: ${{secrets.DB_HOST}}
-  DB_PORT: ${{secrets.DB_PORT}}
   DEEPL_AUTH_KEY: ${{secrets.DEEPL_AUTH_KEY}}
   GOOGLE_PROJECT_CREDENTIALS: ${{secrets.GOOGLE_PROJECT_CREDENTIALS}}
   GOOGLE_PROJECT_ID: ${{secrets.GOOGLE_PROJECT_ID}}
@@ -28,4 +22,4 @@ jobs:
       - name: Install requirements
         run: pip install -r requirements.txt
       - name: Execute tests
-        run: python manage.py test
+        run: python manage.py test --settings=core.settings_github_testing
