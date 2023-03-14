@@ -5,21 +5,16 @@ env:
   DEBUG: ${{secrets.DEBUG}}
   ALLOWED_HOSTS: ${{secrets.ALLOWED_HOSTS}}
   CSRF_TRUSTED_ORIGINS: ${{secrets.CSRF_TRUSTED_ORIGINS}}
-  DEEPL_AUTH_KEY: ${{secrets.DEEPL_AUTH_KEY}}
-  GOOGLE_PROJECT_CREDENTIALS: ${{secrets.GOOGLE_PROJECT_CREDENTIALS}}
-  GOOGLE_PROJECT_ID: ${{secrets.GOOGLE_PROJECT_ID}}
 jobs:
   execute_tests:
     name: Install requirements and execute tests
     runs-on: ubuntu-latest
     steps:
-      - name: Update
-        run: sudo apt update
       - name: Check out repository code
         uses: actions/checkout@v3
-      - name: Install pip
-        run: sudo apt install python3-pip
+      - name: Set up Python
+        run: actions/setup-python@v4
       - name: Install requirements
         run: pip install -r requirements.txt
       - name: Execute tests
-        run: python manage.py test --settings=core.settings_github_testing
+        run: python manage.py test --settings=core.settings_github_tests
