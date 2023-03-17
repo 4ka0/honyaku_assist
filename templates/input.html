@@ -9,15 +9,31 @@
 
         {% csrf_token %}
 
-        <div class="form-group d-flex justify-content-center mt-2">
-            {{ form.direction|as_crispy_field }}
+        <div class="row">
+
+            <div class="col-9">
+                {{ form.source_text|as_crispy_field }}
+            </div>
+
+            <div class="col-3 align-self-center">
+
+                <div class="form-group d-flex justify-content-center">
+                    {{ form.direction|as_crispy_field }}
+                </div>
+
+                <br>
+
+                <div class="form-group ">
+                    <button type="submit" class="btn btn-primary mb-3">Translate</button>
+                </div>
+
+                </div>
+
+
+            </div>
+
         </div>
 
-        <div class="form-group mt-2">
-            {{ form.source_text|as_crispy_field }}
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-2">Translate</button>
     </form>
 
 </div>
