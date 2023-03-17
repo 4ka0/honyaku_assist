@@ -9,7 +9,7 @@
         <span class="small text-muted">
             (No. of characters: {{ source_text_length|intcomma }})
         </span>
-        <div class="alert alert-warning" role="alert">{{ source_text }}</div>
+        <div class="alert alert-info" role="alert">{{ source_text }}</div>
     </p>
 
     <p class="mb-3">
@@ -29,7 +29,7 @@
             (No. of characters: {{ google_result_length|intcomma }})
             (Current usage: {{ google_usage|intcomma }} / 500,000 characters this month)
         </span>
-        <div class="alert alert-info" role="alert">{{ google_result|safe }}</div>
+        <div class="alert alert-primary" role="alert">{{ google_result|safe }}</div>
     </p>
 
     <div class="text-center my-4">
