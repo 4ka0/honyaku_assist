@@ -6,9 +6,11 @@ from .utils import translation_direction, call_deepl_api, call_google_api_v3
 
 def translate_view(request):
     """
-    View for the homepage. Basically displays either:
-    (1) a form to receive the source text to be translated from the user, or
-    (2) the translation results received from the DeepL and Google APIs.
+    A view for receiving source text to be translated via a form, and rendering
+    translation results received from external APIs.
+    Basically displays either:
+    - a form to receive the source text to be translated from the user, or
+    - the translation results received from the APIs.
     """
 
     if request.method == 'POST':
@@ -26,7 +28,6 @@ def translate_view(request):
             # Get translation results
             deepl_result, deepl_usage = call_deepl_api(source_text, source_lang, target_lang)
             deepl_result_length = len(str(deepl_result))
-
             google_result = call_google_api_v3(source_text, source_lang, target_lang)
             google_result_length = len(google_result)
 
