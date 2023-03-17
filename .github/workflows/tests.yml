@@ -5,6 +5,7 @@ env:
   DEBUG: ${{secrets.DEBUG}}
   ALLOWED_HOSTS: ${{secrets.ALLOWED_HOSTS}}
   CSRF_TRUSTED_ORIGINS: ${{secrets.CSRF_TRUSTED_ORIGINS}}
+  DEEPL_AUTH_KEY: ${{secrets.DEEPL_AUTH_KEY}}
 jobs:
   execute_tests:
     name: Install requirements and execute tests
