@@ -35,7 +35,7 @@ def call_deepl_api(source_text, source_lang, target_lang):
     result = ""
     usage = ""
 
-    # Authenticate
+    # Authenticate with DeepL
     try:
         translator = deepl.Translator(env.str("DEEPL_AUTH_KEY"))
     except DeepLException as e:
@@ -43,7 +43,7 @@ def call_deepl_api(source_text, source_lang, target_lang):
         usage = "(Unknown)"
         return result, usage
 
-    # Get translation
+    # Get translation from DeepL
     try:
         result = translator.translate_text(
                 source_text,
@@ -56,7 +56,7 @@ def call_deepl_api(source_text, source_lang, target_lang):
         usage = "(Unknown)"
         return result, usage
 
-    # Get current usage
+    # Get current usage from DeepL
     try:
         usage_obj = translator.get_usage()
         usage = usage_obj.character.count
