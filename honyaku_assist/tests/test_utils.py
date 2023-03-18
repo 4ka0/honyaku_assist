@@ -13,7 +13,7 @@ class TestOutput(SimpleTestCase):
         # The below makes actual calls to the DeepL and Google APIs.
         """
         self.valid_data_response = self.client.post(
-            reverse('translate'),
+            reverse('index'),
             {'direction': 'Ja>En', 'source_text': '花粉飛散情報'}
         )
         """
@@ -32,7 +32,7 @@ class TestOutput(SimpleTestCase):
 
             # Make a request to the view.
             self.response = self.client.post(
-                reverse('translate'),
+                reverse('index'),
                 {'direction': 'Ja>En', 'source_text': '花粉飛散情報'}
             )
 
@@ -82,7 +82,7 @@ class TestDeepLOutputErrors(SimpleTestCase):
 
             # Make a request to the view.
             response = self.client.post(
-                reverse('translate'),
+                reverse('index'),
                 {'direction': 'Ja>En', 'source_text': '花粉飛散情報'}
             )
 
@@ -101,7 +101,7 @@ class TestDeepLOutputErrors(SimpleTestCase):
 
         # Make a request to the view.
         response = self.client.post(
-            reverse('translate'),
+            reverse('index'),
             {'direction': 'Ja>En', 'source_text': '花粉飛散情報'}
         )
 
