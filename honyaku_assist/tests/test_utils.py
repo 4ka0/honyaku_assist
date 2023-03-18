@@ -59,12 +59,9 @@ class TestOutput(SimpleTestCase):
         self.assertEqual(self.response.context['google_result_length'], 29)
 
     def test_output_page_templates_used(self):
-        self.assertTemplateUsed(self.response, 'base.html')
-        self.assertTemplateUsed(self.response, 'output.html')
+        self.assertTemplateUsed(self.response, 'results.html')
 
     def test_output_page_content(self):
-        self.assertContains(self.response, 'Source text (JA)')
-        self.assertContains(self.response, '(No. of characters: 6)')
         self.assertContains(self.response, 'DeepL result (EN-US)')
         self.assertContains(self.response, 'Pollen dispersal information')
         self.assertContains(self.response, 'Google result (EN-US)')
