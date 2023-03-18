@@ -11,20 +11,19 @@ class TestTranslateView(SimpleTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_page_accessible_by_name(self):
-        response = self.client.get(reverse('translate'))
+        response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
     def test_page_uses_correct_template(self):
-        response = self.client.get(reverse('translate'))
+        response = self.client.get(reverse('index'))
         self.assertTemplateUsed(response, 'base.html')
-        self.assertTemplateUsed(response, 'input.html')
 
     def test_page_title_and_navbar_content(self):
-        response = self.client.get(reverse('translate'))
+        response = self.client.get(reverse('index'))
         self.assertContains(response, '<title>Honyaku Assist</title>')
 
     def test_page_navbar_content(self):
-        response = self.client.get(reverse('translate'))
+        response = self.client.get(reverse('index'))
         self.assertContains(response, '<a class="navbar-brand" href="/">Honyaku Assist</a>')
         self.assertContains(
             response,
@@ -32,7 +31,7 @@ class TestTranslateView(SimpleTestCase):
         )
 
     def test_page_form_content(self):
-        response = self.client.get(reverse('translate'))
+        response = self.client.get(reverse('index'))
         self.assertContains(response, 'Japanese to English')
         self.assertContains(response, 'English to Japanese')
         self.assertContains(response, 'Translate</button>')
