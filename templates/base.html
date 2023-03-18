@@ -35,14 +35,12 @@
 
                         <div class="text-center">
 
-                            <form hx-post="{% url 'index' %}"
-                                  hx-target="#results"
-                                  hx-swap="innerHTML" >
+                            <form>
 
                                 <div class="row">
 
                                     <!-- Large column for textarea to input text to be translated -->
-                                    <div class="form-group col-9">
+                                    <div class="form-group col-9" id='input'>
                                         {{ form.source_text|as_crispy_field }}
                                     </div>
 
@@ -54,11 +52,21 @@
                                             {{ form.direction|as_crispy_field }}
                                         </div>
 
-                                        <br>
-
                                         <!-- Submit button -->
                                         <div class="form-group ">
-                                            <button type="submit" class="btn btn-primary mb-3">Translate</button>
+                                            <button
+                                                type="submit"
+                                                class="btn btn-primary my-3"
+                                                hx-post="{% url 'index' %}"
+                                                hx-target="#results"
+                                                hx-swap="innerHTML" >
+                                                Translate
+                                            </button>
+                                        </div>
+
+                                        <!-- Clear button -->
+                                        <div class="form-group ">
+                                            <button class="btn btn-secondary mb-3" onclick="javascript:clearTextArea();">Clear</button>
                                         </div>
 
                                     </div>
@@ -94,8 +102,10 @@
         <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
 
         <!-- HTMX -->
-
         <script src="{% static 'js/htmx.min.js' %}"></script>
+
+        <!-- Custom JS -->
+        <script src="{% static 'js/custom.js' %}"></script>
 
     </body>
 
