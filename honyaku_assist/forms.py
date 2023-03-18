@@ -3,6 +3,14 @@ from django import forms
 
 class InputForm(forms.Form):
 
+    # Text area for inputting the source text to be translated
+    source_text = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 8}),
+        max_length=1000,
+        strip=True,
+        label=False,
+    )
+
     # Radio buttons for the translation direction
     direction = forms.ChoiceField(
         widget=forms.RadioSelect,
@@ -11,13 +19,5 @@ class InputForm(forms.Form):
             ("En>Ja", "English to Japanese"),
         ],
         initial="Ja>En",
-        label=False,
-    )
-
-    # Text area for inputting the source text to be translated
-    source_text = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 8}),
-        max_length=1000,
-        strip=True,
         label=False,
     )

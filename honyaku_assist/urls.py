@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import translate_view
+from .views import IndexView
 
 
 urlpatterns = [
-    path('', translate_view, name='translate'),
+    path('', IndexView.as_view(), name='index'),
 ]

@@ -81,13 +81,18 @@ class TestDeepLOutputErrors(SimpleTestCase):
             mock_deepl_translator.return_value = 'A DeepL translation error occurred.'
 
             # Make a request to the view.
-            self.response = self.client.post(
+            response = self.client.post(
                 reverse('translate'),
                 {'direction': 'Ja>En', 'source_text': '花粉飛散情報'}
             )
 
             # Assert that the mocked function is actually called.
             mock_deepl_translator.assert_called_once()
+
+            self.assertEqual(response.status_code, 200)
+
+            print(response.content)
+            print(response.context)
 
     @patch('deepl.Translator')
     def test_deepl_api_exception_handling_1(self, mock_deepl_translator):
@@ -104,5 +109,5 @@ class TestDeepLOutputErrors(SimpleTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        print(response.content)
-        print(response.context)
+        # print(response.content)
+        # print(response.context)
