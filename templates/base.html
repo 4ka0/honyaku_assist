@@ -41,18 +41,22 @@
 
                                 <div class="row">
 
+                                    <!-- Large column for textarea to input text to be translated -->
                                     <div class="form-group col-9">
                                         {{ form.source_text|as_crispy_field }}
                                     </div>
 
+                                    <!-- Small column for buttons -->
                                     <div class="col-3 align-self-center">
 
+                                        <!-- Radio buttons for the translation direction -->
                                         <div class="form-group d-flex justify-content-center">
                                             {{ form.direction|as_crispy_field }}
                                         </div>
 
                                         <br>
 
+                                        <!-- Submit button -->
                                         <div class="form-group ">
                                             <button type="submit" class="btn btn-primary mb-3">Translate</button>
                                         </div>
@@ -69,7 +73,10 @@
 
                         <div class="mt-3" id="results">
 
-                            {% if source_text %}
+                            <!-- 'results.html' is only included if there are translation results
+                                  to be shown -->
+
+                            {% if deepl_result or google_result %}
 
                                 {% include 'results.html' %}
 
