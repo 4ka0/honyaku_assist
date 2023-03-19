@@ -40,7 +40,7 @@
                                 <div class="row">
 
                                     <!-- Large column for textarea to input text to be translated -->
-                                    <div class="form-group col-9" id='input'>
+                                    <div class="form-group col-9">
                                         {{ form.source_text|as_crispy_field }}
                                     </div>
 
@@ -62,11 +62,6 @@
                                                 hx-swap="innerHTML" >
                                                 Translate
                                             </button>
-                                        </div>
-
-                                        <!-- Clear button -->
-                                        <div class="form-group ">
-                                            <button class="btn btn-secondary mb-3" onclick="javascript:clearTextArea();">Clear</button>
                                         </div>
 
                                     </div>
@@ -107,6 +102,22 @@
         <!-- Custom JS -->
         <script src="{% static 'js/custom.js' %}"></script>
 
+        <!--
+        The below script has two uses.
+        (1) Sets the focus on the textarea upon the initial page load so as to
+        be ready to receive input of the text to be translated from the user.
+        (2) After the latest results have been inserted into the page, the focus
+        is set on the textarea and the previous query that remains in the
+        textarea is selected, which makes it easy for the user to either delete
+        the previous query or revise the previous query for the next query.
+        -->
+        <script>
+            document.body.addEventListener('htmx:afterSwap', () => {
+                const textArea = document.getElementById('id_source_text');
+                textArea.focus();
+                textArea.select();
+            });
+        </script>
     </body>
 
 </html>
