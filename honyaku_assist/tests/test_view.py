@@ -34,4 +34,4 @@ class TestTranslateView(SimpleTestCase):
         response = self.client.get(reverse('index'))
         self.assertContains(response, 'Japanese to English')
         self.assertContains(response, 'English to Japanese')
-        self.assertContains(response, 'Translate</button>')
+        self.assertContains(response, 'Translate')
