@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils import timezone
 
 from environs import Env
 import deepl
@@ -6,6 +7,10 @@ from deepl.exceptions import DeepLException
 from google.oauth2 import service_account
 from google.cloud import translate  # For the advanced API (v3)
 # from google.cloud import translate_v2 as translate  # For the basic API (v2)
+
+
+GOOGLE_USAGE = 100
+GOOGLE_USAGE_LAST_UPDATED = 0
 
 
 def translation_direction(direction):
@@ -67,6 +72,24 @@ def call_deepl_api(source_text, source_lang, target_lang):
     return result, usage
 
 
+def get_google_usage():
+
+    print("**********")
+
+    month = timezone.now().month
+    day = timezone.now().day
+
+    print(f"month = {month}")
+    print(f"day = {day}")
+
+    # Reset usage if first day of the month
+    # and not yet been updated this month
+
+    print("**********")
+
+    return GOOGLE_USAGE
+
+
 def call_google_api_v3(source_text, source_lang, target_lang):
     """
     Method for calling the Google Translate API.
@@ -113,7 +136,9 @@ def call_google_api_v3(source_text, source_lang, target_lang):
     except Exception as e:
         result = "(Error: " + str(e) + ")"
 
-    return result
+    usage = get_google_usage()
+
+    return result, usage
 
 
 '''
