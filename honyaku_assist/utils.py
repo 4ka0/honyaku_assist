@@ -9,7 +9,7 @@ from google.cloud import translate  # For the advanced API (v3)
 # from google.cloud import translate_v2 as translate  # For the basic API (v2)
 
 
-GOOGLE_USAGE = 100
+GOOGLE_USAGE = 0
 GOOGLE_USAGE_LAST_UPDATED = 0
 
 
@@ -82,8 +82,9 @@ def get_google_usage():
     print(f"month = {month}")
     print(f"day = {day}")
 
-    # Reset usage if first day of the month
-    # and not yet been updated this month
+    # Check if usage has already been reset
+    # If so, add current char count
+    # If not, reset usage + add current char count
 
     print("**********")
 
