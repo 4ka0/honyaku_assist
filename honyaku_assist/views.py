@@ -20,9 +20,11 @@ class IndexView(FormView):
         # Determine source and target languages
         source_lang, target_lang = translation_direction(direction)
 
-        # Get translation results
+        # Get DeepL translation result
         deepl_result, deepl_usage = call_deepl_api(source_text, source_lang, target_lang)
         deepl_result_length = len(str(deepl_result))
+
+        # Get Google translation result
         google_result, google_usage = call_google_api_v3(source_text, source_lang, target_lang)
         google_result_length = len(google_result)
 
