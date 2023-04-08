@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.utils import timezone
 
 from environs import Env
 import deepl
@@ -8,9 +7,7 @@ from google.oauth2 import service_account
 from google.cloud import translate  # For the advanced API (v3)
 # from google.cloud import translate_v2 as translate  # For the basic API (v2)
 
-
-GOOGLE_USAGE = 0
-GOOGLE_USAGE_LAST_UPDATED = 0
+from .models import Engine
 
 
 def translation_direction(direction):
@@ -72,23 +69,11 @@ def call_deepl_api(source_text, source_lang, target_lang):
     return result, usage
 
 
-def get_google_usage():
-
-    print("**********")
-
-    month = timezone.now().month
-    day = timezone.now().day
-
-    print(f"month = {month}")
-    print(f"day = {day}")
-
-    # Check if usage has already been reset
-    # If so, add current char count
-    # If not, reset usage + add current char count
-
-    print("**********")
-
-    return GOOGLE_USAGE
+def get_google_usage(translation_result):
+    google_engine = Engine.objects.filter(name="Google")
+    google_engine.update_usage(translation_result)
+    current_usage = google_engine.get_current_usage()
+    return current_usage
 
 
 def call_google_api_v3(source_text, source_lang, target_lang):
@@ -137,7 +122,7 @@ def call_google_api_v3(source_text, source_lang, target_lang):
     except Exception as e:
         result = "(Error: " + str(e) + ")"
 
-    usage = get_google_usage()
+    usage = get_google_usage(result)
 
     return result, usage
 
