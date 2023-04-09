@@ -1,12 +1,12 @@
 from unittest.mock import patch
 
 from django.urls import reverse
-from django.test import SimpleTestCase
+from django.test import TestCase
 
 import deepl
 
 
-class TestOutput(SimpleTestCase):
+class TestOutput(TestCase):
 
     def setUp(self):
 
@@ -68,7 +68,7 @@ class TestOutput(SimpleTestCase):
         self.assertContains(self.response, 'Pollen dispersion information')
 
 
-class TestDeepLOutputErrors(SimpleTestCase):
+class TestDeepLOutputErrors(TestCase):
 
     def test_deepl_api_exception_handling_1(self):
 
