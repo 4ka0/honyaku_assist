@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils import timezone
 
 from environs import Env
 import deepl
@@ -69,11 +70,39 @@ def call_deepl_api(source_text, source_lang, target_lang):
     return result, usage
 
 
-def get_google_usage(translation_result):
-    google_engine = Engine.objects.filter(name="Google")
-    google_engine.update_usage(translation_result)
-    current_usage = google_engine.get_current_usage()
-    return current_usage
+def get_google_usage(source_text):
+    """ Calculates the current usage for the Google engine taking into account
+        the current source text that has been translated.
+        The usage is reset for the current month if this has not already been
+        done. """
+
+    # Get Google engine object
+    google_engine = Engine.objects.filter(name="Google")[0]
+
+    # Update the Google usage value
+
+    # Create a tuple representing the current month/year, e.g. (4, 2023).
+    current_date = (timezone.now().month, timezone.now().year)
+
+    # Create similar tuple for month/year the usage was last reset.
+    last_reset_date = (
+        google_engine.usage_last_reset_month,
+        google_engine.usage_last_reset_year
+    )
+
+    # If the usage has not been reset for the current month.
+    if last_reset_date != current_date:
+        # Reset the usage value and update the usage date values
+        google_engine.current_usage = len(source_text)
+        google_engine.usage_last_reset_month = current_date[0]
+        google_engine.usage_last_reset_year = current_date[1]
+    else:
+        # Simply add to the current usage
+        google_engine.current_usage += len(source_text)
+
+    google_engine.save()
+
+    return google_engine.current_usage
 
 
 def call_google_api_v3(source_text, source_lang, target_lang):
@@ -122,7 +151,7 @@ def call_google_api_v3(source_text, source_lang, target_lang):
     except Exception as e:
         result = "(Error: " + str(e) + ")"
 
-    usage = get_google_usage(result)
+    usage = get_google_usage(source_text)
 
     return result, usage
 
