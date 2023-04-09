@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     # Local
-    "accounts",
-    "honyaku_assist",
+    "accounts.apps.AccountsConfig",
+    "honyaku_assist.apps.HonyakuAssistConfig",
     # Third party
     "crispy_forms",
     "crispy_bootstrap5",
