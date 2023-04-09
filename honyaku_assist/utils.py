@@ -28,8 +28,8 @@ def call_deepl_api(source_text, source_lang, target_lang):
     """
     Method for calling the DeepL API.
     Returns:
-    result (str): the translation obtained from DeepL
-    usage (int): current monthly usage according to DeepL
+    result (str): the translation obtained from DeepL.
+    usage (int): current monthly usage according to DeepL.
     """
 
     env = Env()
@@ -110,7 +110,8 @@ def call_google_api_v3(source_text, source_lang, target_lang):
     Method for calling the Google Translate API.
     Uses the Cloud Translation Advanced API (v3).
     Returns:
-    result (str): the translation obtained from Google
+    result (str): the translation obtained from Google.
+    usage (int): current monthly usage calculated locally.
     """
 
     env = Env()
