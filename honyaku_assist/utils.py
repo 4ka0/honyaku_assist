@@ -86,16 +86,16 @@ def get_google_usage(source_text):
 
     # Create similar tuple for month/year the usage was last reset.
     last_reset_date = (
-        google_engine.usage_last_reset_month,
-        google_engine.usage_last_reset_year
+        google_engine.month_usage_last_reset,
+        google_engine.year_usage_last_reset
     )
 
     # If the usage has not been reset for the current month.
     if last_reset_date != current_date:
         # Reset the usage value and update the usage date values
         google_engine.current_usage = len(source_text)
-        google_engine.usage_last_reset_month = current_date[0]
-        google_engine.usage_last_reset_year = current_date[1]
+        google_engine.month_usage_last_reset = current_date[0]
+        google_engine.year_usage_last_reset = current_date[1]
     else:
         # Simply add to the current usage
         google_engine.current_usage += len(source_text)

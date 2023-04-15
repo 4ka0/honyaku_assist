@@ -11,12 +11,13 @@ class Engine(models.Model):
     current_usage = models.IntegerField(default=0)
 
     # The month/year the usage was last reset
-    usage_last_reset_month = models.IntegerField(default=timezone.now().month)
-    usage_last_reset_year = models.IntegerField(default=timezone.now().year)
+    month_usage_last_reset = models.IntegerField(default=timezone.now().month)
+    year_usage_last_reset = models.IntegerField(default=timezone.now().year)
 
     class Meta:
         verbose_name = "engine"
         verbose_name_plural = "engines"
+        app_label = "honyaku_assist"
 
     def __str__(self):
         return self.name

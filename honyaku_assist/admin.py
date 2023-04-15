@@ -8,8 +8,8 @@ class EngineAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "current_usage",
-        "usage_last_reset_month",
-        "usage_last_reset_year",
+        "month_usage_last_reset",
+        "year_usage_last_reset",
     )
 
 
