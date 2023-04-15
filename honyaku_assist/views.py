@@ -22,11 +22,9 @@ class IndexView(FormView):
 
         # Get DeepL translation result
         deepl_result, deepl_usage = call_deepl_api(source_text, source_lang, target_lang)
-        deepl_result_length = len(str(deepl_result))
 
         # Get Google translation result
         google_result, google_usage = call_google_api_v3(source_text, source_lang, target_lang)
-        google_result_length = len(google_result)
 
         data = {
             "source_text": source_text,
@@ -34,10 +32,10 @@ class IndexView(FormView):
             "source_lang": source_lang,
             "target_lang": target_lang,
             "deepl_result": deepl_result,
-            "deepl_result_length": deepl_result_length,
+            "deepl_result_length": len(str(deepl_result)),
             "deepl_usage": deepl_usage,
             "google_result": google_result,
-            "google_result_length": google_result_length,
+            "google_result_length": len(google_result),
             "google_usage": google_usage,
         }
 

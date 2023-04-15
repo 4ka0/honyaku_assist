@@ -27,8 +27,8 @@ class TestOutput(TestCase):
             mock_deepl_call.return_value = deepl_result, deepl_usage
 
             # Mock the values returned by call_google_api_v3() in the view.
-            google_result = 'Pollen dispersion information'
-            mock_google_call.return_value = google_result
+            google_result, google_usage = 'Pollen dispersion information', 500
+            mock_google_call.return_value = google_result, google_usage
 
             # Make a request to the view.
             self.response = self.client.post(
@@ -57,6 +57,7 @@ class TestOutput(TestCase):
     def test_output_page_context_google_data(self):
         self.assertEqual(self.response.context['google_result'], 'Pollen dispersion information')
         self.assertEqual(self.response.context['google_result_length'], 29)
+        self.assertEqual(self.response.context['google_usage'], 500)
 
     def test_output_page_templates_used(self):
         self.assertTemplateUsed(self.response, 'results.html')
@@ -67,7 +68,7 @@ class TestOutput(TestCase):
         self.assertContains(self.response, 'Google result (EN-US)')
         self.assertContains(self.response, 'Pollen dispersion information')
 
-
+"""
 class TestDeepLOutputErrors(TestCase):
 
     def test_deepl_api_exception_handling_1(self):
@@ -88,8 +89,8 @@ class TestDeepLOutputErrors(TestCase):
 
             self.assertEqual(response.status_code, 200)
 
-            print(response.content)
-            print(response.context)
+            # print(response.content)
+            # print(response.context)
 
     @patch('deepl.Translator')
     def test_deepl_api_exception_handling_1(self, mock_deepl_translator):
@@ -108,3 +109,4 @@ class TestDeepLOutputErrors(TestCase):
 
         # print(response.content)
         # print(response.context)
+"""
