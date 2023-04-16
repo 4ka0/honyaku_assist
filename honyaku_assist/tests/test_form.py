@@ -5,31 +5,30 @@ from ..forms import InputForm
 
 
 class TestInputForm(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         cls.empty_form = InputForm()
         cls.valid_form_ja_en = InputForm(
             {
-                "direction": "Ja>En",
+                "translation_direction": "Ja>En",
                 "source_text": "ゼルダの伝説シリーズは任天堂が開発しているコンピュータゲームシリーズ。",
             }
         )
         cls.valid_form_en_ja = InputForm(
             {
-                "direction": "En>Ja",
+                "translation_direction": "En>Ja",
                 "source_text": "Zelda series is a computer game series developed by Nintendo.",
             }
         )
         cls.invalid_form_no_direction = InputForm(
             {
-                "direction": "",
+                "translation_direction": "",
                 "source_text": "Zelda series is a computer game series developed by Nintendo.",
             }
         )
         cls.invalid_form_no_source_text = InputForm(
             {
-                "direction": "Ja>En",
+                "translation_direction": "Ja>En",
                 "source_text": "",
             }
         )
@@ -37,28 +36,38 @@ class TestInputForm(TestCase):
     # Test field properties
 
     def test_direction_label(self):
-        self.assertFalse(self.empty_form.fields["direction"].label)
-        self.assertNotEqual(self.empty_form.fields["direction"].label, "")
-        self.assertNotEqual(self.empty_form.fields["direction"].label, "direction")
-        self.assertNotEqual(self.empty_form.fields["direction"].label, "Direction")
+        self.assertFalse(self.empty_form.fields["translation_direction"].label)
+        self.assertNotEqual(self.empty_form.fields["translation_direction"].label, "")
+        self.assertNotEqual(
+            self.empty_form.fields["translation_direction"].label, "direction"
+        )
+        self.assertNotEqual(
+            self.empty_form.fields["translation_direction"].label, "Direction"
+        )
 
     def test_direction_widget(self):
-        self.assertIsInstance(self.empty_form.fields['direction'].widget, RadioSelect)
+        self.assertIsInstance(
+            self.empty_form.fields["translation_direction"].widget, RadioSelect
+        )
 
     def test_direction_choices(self):
         self.assertEqual(
-            self.empty_form.fields['direction'].choices,
+            self.empty_form.fields["translation_direction"].choices,
             [
                 ("Ja>En", "Japanese to English"),
                 ("En>Ja", "English to Japanese"),
             ],
         )
-        self.assertNotEqual(self.empty_form.fields['direction'].choices, [])
+        self.assertNotEqual(self.empty_form.fields["translation_direction"].choices, [])
 
     def test_direction_initial(self):
-        self.assertEqual(self.empty_form.fields['direction'].initial, "Ja>En")
-        self.assertNotEqual(self.empty_form.fields['direction'].initial, "En>Ja")
-        self.assertNotEqual(self.empty_form.fields['direction'].initial, "")
+        self.assertEqual(
+            self.empty_form.fields["translation_direction"].initial, "Ja>En"
+        )
+        self.assertNotEqual(
+            self.empty_form.fields["translation_direction"].initial, "En>Ja"
+        )
+        self.assertNotEqual(self.empty_form.fields["translation_direction"].initial, "")
 
     def test_source_text_label(self):
         self.assertFalse(self.empty_form.fields["source_text"].label, None)
@@ -68,13 +77,13 @@ class TestInputForm(TestCase):
         self.assertNotEqual(self.empty_form.fields["source_text"].label, "Test Source")
 
     def test_source_text_widget(self):
-        self.assertIsInstance(self.empty_form.fields['source_text'].widget, Textarea)
+        self.assertIsInstance(self.empty_form.fields["source_text"].widget, Textarea)
 
     def test_source_text_max_length(self):
-        self.assertEqual(self.empty_form.fields['source_text'].max_length, 1000)
+        self.assertEqual(self.empty_form.fields["source_text"].max_length, 1000)
 
     def test_source_text_strip(self):
-        self.assertTrue(self.empty_form.fields['source_text'].strip)
+        self.assertTrue(self.empty_form.fields["source_text"].strip)
 
     # Test submission of valid forms
 
@@ -84,11 +93,15 @@ class TestInputForm(TestCase):
         self.assertEqual(len(self.valid_form_ja_en.errors), 0)
         self.assertEqual(self.valid_form_ja_en.errors, {})
         self.assertEqual(self.valid_form_ja_en.errors.as_text(), "")
-        self.assertEqual(self.valid_form_ja_en.cleaned_data["direction"], "Ja>En")
-        self.assertNotEqual(self.valid_form_ja_en.cleaned_data["direction"], "En>Ja")
+        self.assertEqual(
+            self.valid_form_ja_en.cleaned_data["translation_direction"], "Ja>En"
+        )
+        self.assertNotEqual(
+            self.valid_form_ja_en.cleaned_data["translation_direction"], "En>Ja"
+        )
         self.assertEqual(
             self.valid_form_ja_en.cleaned_data["source_text"],
-            "ゼルダの伝説シリーズは任天堂が開発しているコンピュータゲームシリーズ。"
+            "ゼルダの伝説シリーズは任天堂が開発しているコンピュータゲームシリーズ。",
         )
 
     def test_valid_form_en_ja(self):
@@ -97,11 +110,15 @@ class TestInputForm(TestCase):
         self.assertEqual(len(self.valid_form_en_ja.errors), 0)
         self.assertEqual(self.valid_form_en_ja.errors, {})
         self.assertEqual(self.valid_form_en_ja.errors.as_text(), "")
-        self.assertEqual(self.valid_form_en_ja.cleaned_data["direction"], "En>Ja")
-        self.assertNotEqual(self.valid_form_en_ja.cleaned_data["direction"], "Ja>En")
+        self.assertEqual(
+            self.valid_form_en_ja.cleaned_data["translation_direction"], "En>Ja"
+        )
+        self.assertNotEqual(
+            self.valid_form_en_ja.cleaned_data["translation_direction"], "Ja>En"
+        )
         self.assertEqual(
             self.valid_form_en_ja.cleaned_data["source_text"],
-            "Zelda series is a computer game series developed by Nintendo."
+            "Zelda series is a computer game series developed by Nintendo.",
         )
 
     # Test submission of invalid form: empty form
@@ -118,7 +135,7 @@ class TestInputForm(TestCase):
         self.assertFalse(self.invalid_form_no_direction.is_valid())
         self.assertNotEqual(self.invalid_form_no_direction.errors, {})
         self.assertEqual(
-            self.invalid_form_no_direction.errors["direction"],
+            self.invalid_form_no_direction.errors["translation_direction"],
             ["This field is required."],
         )
 

@@ -11,14 +11,14 @@ from google.cloud import translate  # For the advanced API (v3)
 from .models import Engine
 
 
-def translation_direction(direction):
+def get_source_target_languages(translation_direction):
     """
     Method to determine the direction of the translation to be performed.
     DeepL accepts "en" as a source language code but not as a target language
     code (has to be either "en-us" or "en-gb"). "en-us" is set here.
     """
 
-    if direction == "Ja>En":
+    if translation_direction == "Ja>En":
         return "ja", "en-us"
     else:
         return "en", "ja"

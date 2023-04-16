@@ -12,7 +12,7 @@ class InputForm(forms.Form):
     )
 
     # Radio buttons for the translation direction
-    direction = forms.ChoiceField(
+    translation_direction = forms.ChoiceField(
         widget=forms.RadioSelect,
         choices=[
             ("Ja>En", "Japanese to English"),

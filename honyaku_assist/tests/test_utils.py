@@ -33,7 +33,7 @@ class TestOutput(TestCase):
             # Make a request to the view.
             self.response = self.client.post(
                 reverse('index'),
-                {'direction': 'Ja>En', 'source_text': '花粉飛散情報'}
+                {'translation_direction': 'Ja>En', 'source_text': '花粉飛散情報'}
             )
 
             # Assert that mocked functions are actually called.
@@ -81,7 +81,7 @@ class TestDeepLOutputErrors(TestCase):
             # Make a request to the view.
             response = self.client.post(
                 reverse('index'),
-                {'direction': 'Ja>En', 'source_text': '花粉飛散情報'}
+                {'translation_direction': 'Ja>En', 'source_text': '花粉飛散情報'}
             )
 
             # Assert that the mocked function is actually called.
@@ -100,7 +100,7 @@ class TestDeepLOutputErrors(TestCase):
         # Make a request to the view.
         response = self.client.post(
             reverse('index'),
-            {'direction': 'Ja>En', 'source_text': '花粉飛散情報'}
+            {'translation_direction': 'Ja>En', 'source_text': '花粉飛散情報'}
         )
 
         mock_deepl_translator.assert_called_once()

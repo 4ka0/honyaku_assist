@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic.edit import FormView
 
 from .forms import InputForm
-from .utils import translation_direction, call_deepl_api, call_google_api_v3
+from .utils import get_source_target_languages, call_deepl_api, call_google_api_v3
 
 
 class IndexView(FormView):
@@ -13,12 +13,12 @@ class IndexView(FormView):
     def form_valid(self, form):
 
         # Get form data
-        direction = form.cleaned_data["direction"]
+        translation_direction = form.cleaned_data["translation_direction"]
         source_text = form.cleaned_data["source_text"]
         source_text_length = len(source_text)
 
         # Determine source and target languages
-        source_lang, target_lang = translation_direction(direction)
+        source_lang, target_lang = get_source_target_languages(translation_direction)
 
         # Get DeepL translation result
         deepl_result, deepl_usage = call_deepl_api(source_text, source_lang, target_lang)
