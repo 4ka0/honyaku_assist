@@ -67,6 +67,7 @@ class TestHandlingOfExceptionsFromDeepL(TestCase):
         # Use the below
         # Intentionally cause exceptions from deepl
         # Check the error message displayed on the page
+        # Check what exceptions can be received from DeepL, try and cause one
 
         response = self.client.post(
             reverse('index'),
