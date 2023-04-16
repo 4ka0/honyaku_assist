@@ -1,37 +1,77 @@
 from unittest.mock import patch
 
 from django.urls import reverse
-from django.test import SimpleTestCase
+from django.test import TestCase
+
+import deepl
 
 
-class TestTranslateView(SimpleTestCase):
-    def test_page_exists_at_desired_url(self):
-        response = self.client.get("")
-        self.assertEqual(response.status_code, 200)
+class TestTranslateView(TestCase):
+    def setUp(self):
 
-    def test_page_accessible_by_name(self):
-        response = self.client.get(reverse("index"))
-        self.assertEqual(response.status_code, 200)
+        # Mock calls to the DeepL and Google APIs.
+        with patch("honyaku_assist.views.call_deepl_api") as mock_deepl_call, \
+             patch("honyaku_assist.views.call_google_api_v3") as mock_google_call:
 
-    def test_page_uses_correct_template(self):
-        response = self.client.get(reverse("index"))
-        self.assertTemplateUsed(response, "base.html")
+            # Mock the values returned by call_deepl_api() in the view.
+            deepl_result, deepl_usage = "Pollen dispersal information", 50
+            mock_deepl_call.return_value = deepl_result, deepl_usage
 
-    def test_page_title_and_navbar_content(self):
-        response = self.client.get(reverse("index"))
-        self.assertContains(response, "<title>Honyaku Assist</title>")
+            # Mock the values returned by call_google_api_v3() in the view.
+            google_result, google_usage = "Pollen dispersion information", 70
+            mock_google_call.return_value = google_result, google_usage
 
-    def test_page_navbar_content(self):
-        response = self.client.get(reverse("index"))
-        self.assertContains(
-            response, '<a class="navbar-brand" href="/">Honyaku Assist</a>'
+            # Make a request to the view.
+            self.response = self.client.post(
+                reverse("index"),
+                {"translation_direction": "Ja>En", "source_text": "花粉飛散情報"},
+            )
+
+            # Assert that mocked functions are actually called.
+            mock_deepl_call.assert_called_once()
+            mock_google_call.assert_called_once()
+
+    def test_output_page_response_status_code(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_output_page_context_contains_submitted_data(self):
+        self.assertEqual(self.response.context["source_lang"], "ja")
+        self.assertEqual(self.response.context["target_lang"], "en-us")
+        self.assertEqual(self.response.context["source_text"], "花粉飛散情報")
+        self.assertEqual(self.response.context["source_text_length"], 6)
+
+    def test_output_page_context_deepl_data(self):
+        self.assertEqual(self.response.context["deepl_result"], "Pollen dispersal information")
+        self.assertEqual(self.response.context["deepl_result_length"], 28)
+        self.assertEqual(self.response.context["deepl_usage"], 50)
+
+    def test_output_page_context_google_data(self):
+        self.assertEqual(self.response.context["google_result"], "Pollen dispersion information")
+        self.assertEqual(self.response.context["google_result_length"], 29)
+        self.assertEqual(self.response.context["google_usage"], 70)
+
+    def test_output_page_templates_used(self):
+        self.assertTemplateUsed(self.response, "results.html")
+
+    def test_output_page_content(self):
+        self.assertContains(self.response, "DeepL result (EN-US)")
+        self.assertContains(self.response, "Pollen dispersal information")
+        self.assertContains(self.response, "Google result (EN-US)")
+        self.assertContains(self.response, "Pollen dispersion information")
+
+
+class TestHandlingOfExceptionsFromDeepL(TestCase):
+
+    def test_deepl_api_exception_handling_1(self):
+
+        # Use the below
+        # Intentionally cause exceptions from deepl
+        # Check the error message displayed on the page
+
+        response = self.client.post(
+            reverse('index'),
+            {'translation_direction': 'Ja>En', 'source_text': '花粉飛散情報'}
         )
-        self.assertContains(
-            response, '<span class="navbar-text">A machine translation assistant for'
-        )
 
-    def test_page_form_content(self):
-        response = self.client.get(reverse("index"))
-        self.assertContains(response, "Japanese to English")
-        self.assertContains(response, "English to Japanese")
-        self.assertContains(response, "Translate")
+        print(response.content)
+        print(response.context)
