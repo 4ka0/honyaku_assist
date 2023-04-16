@@ -3,6 +3,8 @@ from unittest.mock import patch
 from django.urls import reverse
 from django.test import TestCase
 
+from ..models import Engine
+
 import deepl
 
 
@@ -62,6 +64,10 @@ class TestTranslateView(TestCase):
 
 class TestHandlingOfExceptionsFromDeepL(TestCase):
 
+    @classmethod
+    def setUpTestData(cls):
+        cls.engine = Engine.objects.create(name="Google")
+
     def test_deepl_api_exception_handling_1(self):
 
         # Use the below
@@ -74,5 +80,5 @@ class TestHandlingOfExceptionsFromDeepL(TestCase):
             {'translation_direction': 'Ja>En', 'source_text': '花粉飛散情報'}
         )
 
-        print(response.content)
-        print(response.context)
+        # print(response.content)
+        # print(response.context)

@@ -77,7 +77,7 @@ def get_google_usage(source_text):
         done. """
 
     # Get Google engine object
-    google_engine = Engine.objects.filter(name="Google")[0]
+    google_engine = Engine.objects.get(name="Google")
 
     # Update the Google usage value
 
