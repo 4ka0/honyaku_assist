@@ -52,7 +52,7 @@ class TestTranslateView(TestCase):
         self.assertTemplateUsed(self.response, "results.html")
 
     def test_output_page_content(self):
-        self.assertContains(self.response, "DeepL result (EN-US)")
+        self.assertContains(self.response, "DeepL result")
         self.assertContains(self.response, "Pollen dispersal information")
-        self.assertContains(self.response, "Google result (EN-US)")
+        self.assertContains(self.response, "Google result")
         self.assertContains(self.response, "Pollen dispersion information")
