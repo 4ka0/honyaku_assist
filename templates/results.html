@@ -1,25 +1,48 @@
 {% load humanize %}
 
-<!-- DeepL result -->
-
 <p class="mb-3">
-    DeepL result ({{ target_lang|upper }})
-    {% if deepl_usage != "Error" %}
+
+    DeepL result
+
+    <!-- Show details if no errors received from DeepL -->
+    {% if not "error" in deepl_result %}
         <span class="small text-muted">
+            ({{ target_lang|upper }})
             (No. of characters: {{ deepl_result_length|intcomma }})
             (Current usage: {{ deepl_usage|intcomma }} / 500,000 characters this month)
         </span>
     {% endif %}
-    <div class="alert alert-info" role="alert">{{ deepl_result }}</div>
+
+    <!-- DeepL result -->
+
+    {% if not "error" in deepl_result %}
+        <div class="alert alert-info" role="alert">
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+    {% endif %}
+        {{ deepl_result }}
+    </div>
 </p>
 
-<!-- Google result -->
-
 <p class="mb-3">
-    Google result ({{ target_lang|upper }})
-    <span class="small text-muted">
-        (No. of characters: {{ google_result_length|intcomma }})
-        (Current usage: {{ google_usage|intcomma }} / 500,000 characters this month)
-    </span>
-    <div class="alert alert-primary" role="alert">{{ google_result|safe }}</div>
+
+    Google result
+
+    <!-- Show details if no errors  received from Google -->
+    {% if not "error" in google_result %}
+        <span class="small text-muted">
+            ({{ target_lang|upper }})
+            (No. of characters: {{ google_result_length|intcomma }})
+            (Current usage: {{ google_usage|intcomma }} / 500,000 characters this month)
+        </span>
+    {% endif %}
+
+    <!-- Google result -->
+    {% if not "error" in google_result %}
+        <div class="alert alert-primary" role="alert">
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+    {% endif %}
+        {{ google_result|safe }}
+    </div>
 </p>

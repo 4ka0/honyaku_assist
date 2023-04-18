@@ -20,6 +20,7 @@ def get_source_target_languages(translation_direction):
 
     if translation_direction == "Ja>En":
         return "ja", "en-us"
+        # return "xx", "xx"
     else:
         return "en", "ja"
 
@@ -34,37 +35,30 @@ def call_deepl_api(source_text, source_lang, target_lang):
 
     env = Env()
     env.read_env()
+    result, usage = "", ""
 
-    result = ""
-    usage = ""
-
-    # Authenticate with DeepL
     try:
+        # Authenticate with DeepL
         translator = deepl.Translator(env.str("DEEPL_AUTH_KEY"))
-    except DeepLException as e:
-        result = "(DeepL authentication error: " + str(e) + ")"
-        usage = "(Unknown)"
-        return result, usage
 
-    # Get translation from DeepL
-    try:
+        # Get translation from DeepL
         result = translator.translate_text(
                 source_text,
                 source_lang=source_lang,
                 target_lang=target_lang,
                 glossary=None,
             )
-    except DeepLException as e:
-        result = "(DeepL translation error: " + str(e) + ")"
-        usage = "(Unknown)"
-        return result, usage
 
-    # Get current usage from DeepL
-    try:
+        # Get current usage from DeepL
         usage_obj = translator.get_usage()
         usage = usage_obj.character.count
+
     except DeepLException as e:
-        usage = "(DeepL usage error: " + str(e) + ")"
+        result = "DeepL error: " + str(e)
+        return result, usage
+
+    except Exception as e:
+        result = "Error: " + str(e)
         return result, usage
 
     return result, usage
@@ -147,10 +141,10 @@ def call_google_api_v3(source_text, source_lang, target_lang):
         if response.translations[0].translated_text:
             result = response.translations[0].translated_text
         else:
-            result = "(Error: Translation not included in response from Google)"
+            result = "Google error: Translation not included in response from Google."
 
     except Exception as e:
-        result = "(Error: " + str(e) + ")"
+        result = "Google error: " + str(e)
 
     usage = get_google_usage(source_text)
 
