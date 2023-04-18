@@ -65,10 +65,11 @@ def call_deepl_api(source_text, source_lang, target_lang):
 
 
 def get_google_usage(source_text):
-    """ Calculates the current usage for the Google engine taking into account
-        the current source text that has been translated.
-        The usage is reset for the current month if this has not already been
-        done. """
+    """
+    Calculates the current usage for the Google engine taking into account the
+    current source text that has been translated.
+    The usage is reset for the current month if this has not already been done.
+    """
 
     # Get Google engine object
     google_engine = Engine.objects.get(name="Google")

@@ -3,9 +3,11 @@ from django.utils import timezone
 
 
 class Engine(models.Model):
-    """ Model for a machine translation engine.
-        Created essentially to store usage values for engines that don't provide
-        a way to get the usage via their API. """
+    """
+    Model for a machine translation engine.
+    Created essentially to store usage values for engines that don't provide a
+    way to get the usage via their API.
+    """
 
     name = models.CharField(max_length=100)
     current_usage = models.IntegerField(default=0)
