@@ -20,7 +20,6 @@ def get_source_target_languages(translation_direction):
 
     if translation_direction == "Ja>En":
         return "ja", "en-us"
-        # return "xx", "xx"
     else:
         return "en", "ja"
 
