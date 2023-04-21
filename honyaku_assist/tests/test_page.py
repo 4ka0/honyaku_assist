@@ -30,6 +30,30 @@ class TestIndexPage(SimpleTestCase):
 
     def test_index_page_form_content(self):
         response = self.client.get(reverse("index"))
-        self.assertContains(response, "Japanese to English")
-        self.assertContains(response, "English to Japanese")
-        self.assertContains(response, "Translate")
+        self.assertContains(response, "Japanese to English")  # Radio button label
+        self.assertContains(response, "English to Japanese")  # Radio button label
+        self.assertContains(response, "Translate")  # Submit button text
+
+    def test_textarea_is_required_and_has_autofocus(self):
+        response = self.client.get(reverse("index"))
+        expected = (
+            '<textarea name="source_text" cols="40" rows="8" autofocus '
+            'maxlength="1000" class="textarea form-control" required id="id_source_text">'
+        )
+        self.assertContains(response, expected)
+
+    def test_japanese_to_english_radio_button_is_required_and_is_checked(self):
+        response = self.client.get(reverse("index"))
+        expected = (
+            '<input type="radio" class="form-check-input"  name="translation_direction" '
+            'value="Ja&gt;En"  id="id_translation_direction_0" required checked>'
+        )
+        self.assertContains(response, expected)
+
+    def test_english_to_japanese_radio_button_is_required(self):
+        response = self.client.get(reverse("index"))
+        expected = (
+            '<input type="radio" class="form-check-input"  name="translation_direction" '
+            'value="En&gt;Ja"  id="id_translation_direction_1" required>'
+        )
+        self.assertContains(response, expected)
