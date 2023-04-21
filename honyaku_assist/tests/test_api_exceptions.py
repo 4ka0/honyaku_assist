@@ -1,18 +1,20 @@
 from unittest.mock import patch
 
-from django.urls import reverse
 from django.test import TestCase
+from django.urls import reverse
 
 from ..models import Engine
 
 
-class TestHandlingOfExceptionsFromDeepL(TestCase):
-
+class TestDisplayOfExceptionsFromAPIs(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.engine = Engine.objects.create(name="Google")
 
     def test_deepl_api_exception_bad_language_codes(self):
+        """Use bad language codes so that the DeepL and Google translation APIs
+        return exceptions, then check that the corresponding error strings
+        appear in the response."""
         with patch("honyaku_assist.views.get_source_target_languages") as mocked_func:
             mocked_func.return_value = "xx", "xx"
             self.response = self.client.post(
