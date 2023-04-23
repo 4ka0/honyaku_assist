@@ -29,10 +29,10 @@ class TestGetSourceTargetLanguages(SimpleTestCase):
 class TestGetGoogleUsage(TestCase):
     @freeze_time("2023-04-01")
     def test_get_google_usage(self):
-        self.engine = Engine.objects.create(name="Google")
-        self.source_text = "これはテストです。"
-        self.source_text_len = len(self.source_text)
-        usage = get_google_usage(self.source_text)
+        Engine.objects.create(name="Google")
+        source_text = "これはテストです。"
+        source_text_len = len(source_text)
+        usage = get_google_usage(source_text)
 
-        self.assertEqual(usage, self.source_text_len)
+        self.assertEqual(usage, source_text_len)
         self.assertNotEqual(usage, 0)
