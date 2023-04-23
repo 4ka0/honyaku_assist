@@ -44,4 +44,5 @@ class Engine(models.Model):
             self.year_usage_last_reset = current_date[1]
         else:
             self.current_usage += len(source_text)
+
         self.save()
