@@ -23,6 +23,15 @@ def get_source_target_languages(translation_direction):
         return "en", "ja"
 
 
+def get_google_usage(source_text):
+    """
+    Method to return the usage for the Google translation engine.
+    """
+    google_engine = Engine.objects.get(name="Google")
+    google_engine.update_usage(source_text)
+    return google_engine.current_usage
+
+
 def call_deepl_api(source_text, source_lang, target_lang):
     """
     Method for calling the DeepL API.
@@ -60,15 +69,6 @@ def call_deepl_api(source_text, source_lang, target_lang):
         return result, usage
 
     return result, usage
-
-
-def get_google_usage(source_text):
-    """
-    Method to return the usage for the Google translation engine.
-    """
-    google_engine = Engine.objects.get(name="Google")
-    google_engine.update_usage(source_text)
-    return google_engine.current_usage
 
 
 def call_google_api_v3(source_text, source_lang, target_lang):
