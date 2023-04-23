@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.utils import timezone
 
 from environs import Env
 import deepl
@@ -65,37 +64,10 @@ def call_deepl_api(source_text, source_lang, target_lang):
 
 def get_google_usage(source_text):
     """
-    Calculates the current usage for the Google engine taking into account the
-    current source text that has been translated.
-    The usage is reset for the current month if this has not already been done.
+    Method to return the usage for the Google translation engine.
     """
-
-    # Get Google engine object
     google_engine = Engine.objects.get(name="Google")
-
-    # Update the Google usage value
-
-    # Create a tuple representing the current month/year, e.g. (4, 2023).
-    current_date = (timezone.now().month, timezone.now().year)
-
-    # Create similar tuple for month/year the usage was last reset.
-    last_reset_date = (
-        google_engine.month_usage_last_reset,
-        google_engine.year_usage_last_reset
-    )
-
-    # If the usage has not been reset for the current month.
-    if last_reset_date != current_date:
-        # Reset the usage value and update the usage date values
-        google_engine.current_usage = len(source_text)
-        google_engine.month_usage_last_reset = current_date[0]
-        google_engine.year_usage_last_reset = current_date[1]
-    else:
-        # Simply add to the current usage
-        google_engine.current_usage += len(source_text)
-
-    google_engine.save()
-
+    google_engine.update_usage(source_text)
     return google_engine.current_usage
 
 
