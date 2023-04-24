@@ -31,10 +31,8 @@ class Engine(models.Model):
         Takes into account the fact that the usage needs to be reset each month.
         """
 
-        # Create a tuple representing the current month/year, e.g. (4, 2023).
-        current_date = (timezone.now().month, timezone.now().year)
-        # Create similar tuple for the month/year the usage was last reset.
-        date_last_reset = (self.month_usage_last_reset, self.year_usage_last_reset)
+        current_date: tuple = (timezone.now().month, timezone.now().year)
+        date_last_reset: tuple = (self.month_usage_last_reset, self.year_usage_last_reset)
 
         if date_last_reset != current_date:
             # Reset usage value to the length of the source text to be translated.
