@@ -5,6 +5,7 @@ from ..forms import InputForm
 
 
 class TestInputForm(TestCase):
+    
     @classmethod
     def setUpTestData(cls):
         cls.empty_form = InputForm()

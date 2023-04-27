@@ -5,6 +5,7 @@ from django.test import TestCase
 
 
 class TestTranslateView(TestCase):
+    
     def setUp(self):
 
         # Mock calls to the DeepL and Google APIs.

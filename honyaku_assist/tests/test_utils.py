@@ -7,6 +7,7 @@ from ..utils import get_google_usage, get_source_target_languages
 
 
 class TestGetSourceTargetLanguages(SimpleTestCase):
+
     def test_get_source_target_languages_Ja_to_En(self):
         translation_direction = "Ja>En"
         src_lang, tar_lang = get_source_target_languages(translation_direction)
@@ -27,6 +28,7 @@ class TestGetSourceTargetLanguages(SimpleTestCase):
 
 
 class TestGetGoogleUsage(TestCase):
+    
     @freeze_time("2023-04-01")
     def test_get_google_usage(self):
         Engine.objects.create(name="Google")

@@ -7,6 +7,7 @@ from ..models import Engine
 
 
 class TestDisplayOfExceptionsFromAPIs(TestCase):
+
     @classmethod
     def setUpTestData(cls):
         cls.engine = Engine.objects.create(name="Google")
@@ -17,6 +18,7 @@ class TestDisplayOfExceptionsFromAPIs(TestCase):
         return exceptions, then check that the corresponding error strings
         appear in the response.
         """
+        
         with patch("honyaku_assist.views.get_source_target_languages") as mocked_func:
             mocked_func.return_value = "xx", "xx"
             self.response = self.client.post(
