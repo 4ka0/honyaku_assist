@@ -15,6 +15,14 @@ def get_source_target_languages(translation_direction):
     Method to determine the direction of the translation to be performed.
     DeepL accepts "en" as a source language code but not as a target language
     code (has to be either "en-us" or "en-gb"); "en-us" is set here.
+
+    Args:
+        translation_direction (str): The direction of translation.
+            Either "Ja>En" of "En>Ja".
+
+    Returns:
+        Two strings representing the source language and the target language,
+        respectively.
     """
 
     if translation_direction == "Ja>En":
@@ -26,6 +34,13 @@ def get_source_target_languages(translation_direction):
 def get_google_usage(source_text):
     """
     Method to return the usage for the Google translation engine.
+
+    Args:
+        source_text (str): The source text to be translated.
+
+    Returns:
+        current_usage (int): Number of characters translated in the
+                             current month.
     """
     google_engine = Engine.objects.get(name="Google")
     google_engine.update_usage(source_text)
@@ -34,14 +49,21 @@ def get_google_usage(source_text):
 
 def call_deepl_api(source_text, source_lang, target_lang):
     """
-    Method for calling the DeepL API.
+    Calls the DeepL API to get a translation for source_text.
+
+    Args:
+        source_text (str): The source text to be translated.
+        source_lang (str): The language of the source text.
+        target_lang (str): The language to be translated into.
+
     Returns:
-    result (str): the translation obtained from DeepL.
-    usage (int): current monthly usage according to DeepL.
+        result (str): The translation obtained from DeepL.
+        usage (str): Number of characters translated in the current month.
     """
 
     env = Env()
     env.read_env()
+
     result, usage = "", ""
 
     try:
@@ -75,9 +97,15 @@ def call_google_api_v3(source_text, source_lang, target_lang):
     """
     Method for calling the Google Translate API.
     Uses the Cloud Translation Advanced API (v3).
+
+    Args:
+        source_text (str): The source text to be translated.
+        source_lang (str): The language of the source text.
+        target_lang (str): The language to be translated into.
+
     Returns:
-    result (str): the translation obtained from Google.
-    usage (int): current monthly usage calculated locally.
+        result (str): The translation obtained from Google.
+        usage (int): Number of characters translated so far in the current month.
     """
 
     env = Env()
@@ -123,12 +151,8 @@ def call_google_api_v3(source_text, source_lang, target_lang):
     return result, usage
 
 
-'''
+"""
 def call_google_api_v2(source_text, source_lang, target_lang):
-    """
-    Method for calling the Google Translate API.
-    Uses the Cloud Translation Basic API (v2).
-    """
 
     env = Env()
     env.read_env()
@@ -148,4 +172,4 @@ def call_google_api_v2(source_text, source_lang, target_lang):
     )
 
     return result["translatedText"]
-'''
+"""

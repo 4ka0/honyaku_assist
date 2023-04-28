@@ -6,6 +6,12 @@ from .utils import get_source_target_languages, call_deepl_api, call_google_api_
 
 
 class IndexView(FormView):
+    """
+    View for receiving translation input, retrieving translations from the
+    different translation APIs, and displaying the translations.
+    Receives, via a form, the text to be translated and the direction of
+    translation, i.e. the source language and target language.
+    """
 
     template_name = 'base.html'
     form_class = InputForm

@@ -2,6 +2,10 @@ from django import forms
 
 
 class InputForm(forms.Form):
+    """
+    Form for receiving the text to be translated and the direction of
+    translation, i.e. the source language and target language.
+    """
 
     # Text area for inputting the source text to be translated
     source_text = forms.CharField(

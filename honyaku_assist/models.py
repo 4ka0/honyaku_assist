@@ -28,6 +28,11 @@ class Engine(models.Model):
         """
         Method to update the usage of the engine.
         Takes into account the fact that the usage needs to be reset each month.
+
+        Args:
+            self (Engine obj): An instance of the engine in question.
+            source_text (str): The source text to be translated.
+
         """
 
         current_month: tuple = (timezone.now().month, timezone.now().year)
