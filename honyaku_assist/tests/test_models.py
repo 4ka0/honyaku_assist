@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from ..utils import get_google_usage
 from ..models import Engine
 
 from freezegun import freeze_time
@@ -101,7 +100,7 @@ class EngineModelTests(TestCase):
 
     def test_verbose_name_plural(self):
         verbose_name_plural = self.engine._meta.verbose_name_plural
-        
+
         self.assertEqual(verbose_name_plural, "engines")
         self.assertNotEqual(verbose_name_plural, "engine")
         self.assertNotEqual(verbose_name_plural, "")
