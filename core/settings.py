@@ -85,6 +85,8 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+
+# Local development database setting
 DATABASES = {
     "default": {
         "ENGINE": env.str("DB_ENGINE"),
@@ -95,6 +97,14 @@ DATABASES = {
         "PORT": env.int("DB_PORT"),
     }
 }
+
+
+# Fly.io deployment database setting
+"""
+DATABASES = {
+    "default": env.dj_db_url("DATABASE_URL"),
+}
+"""
 
 
 # Password validation
