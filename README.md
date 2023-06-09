@@ -4,7 +4,8 @@ A webapp for comparing output from the DeepL and Google Translate machine transl
 (Useful for tired translators needing some inspiration.)
 
 - Retrieves translation results from the DeepL and Google Translate APIs.
-- Keeps track of monthly usage relative to the free tier limits offered through these APIs (both APIs have monthly limits of 500,000 characters).
+- Keeps track of monthly usage relative to the free tier limits offered through these APIs<br>
+  (both APIs have monthly limits of 500,000 characters).
 - Results are displayed on the same page using HTMX for partial page reloads.
 
 ### Built using:
