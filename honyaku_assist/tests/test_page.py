@@ -31,7 +31,7 @@ class TestIndexPage(SimpleTestCase):
             response, '<a class="navbar-brand" href="/">Honyaku Assist</a>'
         )
         self.assertContains(
-            response, '<span class="navbar-text">A machine translation assistant for'
+            response, '<span class="navbar-text">< a translation assistant for comparing machine engine output >'
         )
 
     def test_index_page_form_content(self):
@@ -65,5 +65,5 @@ class TestIndexPage(SimpleTestCase):
             '<input type="radio" class="form-check-input"  name="translation_direction" '
             'value="En&gt;Ja"  id="id_translation_direction_1" required>'
         )
-        
+
         self.assertContains(response, expected)
