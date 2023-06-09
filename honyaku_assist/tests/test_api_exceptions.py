@@ -27,5 +27,5 @@ class TestDisplayOfExceptionsFromAPIs(TestCase):
             )
 
             mocked_func.assert_called_once()
-            self.assertContains(self.response, "DeepL error")
-            self.assertContains(self.response, "Google error")
+            self.assertContains(self.response, "DeepL Error")
+            self.assertContains(self.response, "Google Error")

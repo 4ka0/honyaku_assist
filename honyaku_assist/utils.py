@@ -1,13 +1,22 @@
+import os
 from django.conf import settings
 
-from environs import Env
+# from environs import Env  # For local environment variables
 import deepl
 from deepl.exceptions import DeepLException
 from google.oauth2 import service_account
 from google.cloud import translate  # For the advanced API (v3)
+
 # from google.cloud import translate_v2 as translate  # For the basic API (v2)
 
 from .models import Engine
+
+
+USAGE_LIMIT = 500000
+USAGE_LIMIT_MESSAGE = (
+    "Usage Error: Either this translation will result in this month's limit being exceeded, "
+    "or this month's limit has already been exceeded. Please try again next month."
+)
 
 
 def get_source_target_languages(translation_direction):
@@ -31,7 +40,19 @@ def get_source_target_languages(translation_direction):
         return "en", "ja"
 
 
-def get_google_usage(source_text):
+def get_google_usage():
+    """
+    Method to return the usage for the Google translation engine.
+
+    Returns:
+        current_usage (int): Number of characters translated in the
+                             current month.
+    """
+    google_engine = Engine.objects.get(name="Google")
+    return google_engine.current_usage
+
+
+def update_google_usage(source_text):
     """
     Method to return the usage for the Google translation engine.
 
@@ -45,6 +66,23 @@ def get_google_usage(source_text):
     google_engine = Engine.objects.get(name="Google")
     google_engine.update_usage(source_text)
     return google_engine.current_usage
+
+
+def empty_check(result):
+    """
+    Method to check whether a translation result received from an API is empty.
+
+    Args:
+        result (str): The translation result from an API.
+
+    Returns:
+        output (str): Either the translation result unchanged,
+                      or an error message.
+    """
+    if not result:
+        return "API Error: No translation received."
+
+    return result
 
 
 def call_deepl_api(source_text, source_lang, target_lang):
@@ -61,34 +99,45 @@ def call_deepl_api(source_text, source_lang, target_lang):
         usage (str): Number of characters translated in the current month.
     """
 
-    env = Env()
-    env.read_env()
+    # For local environment variables
+    # env = Env()
+    # env.read_env()
 
     result, usage = "", ""
 
     try:
-        # Authenticate with DeepL
-        translator = deepl.Translator(env.str("DEEPL_AUTH_KEY"))
+        # Authenticate
+        # deepl_auth_key = env.str("DEEPL_AUTH_KEY")  # For local env variables
+        deepl_auth_key = os.environ["DEEPL_AUTH_KEY"]  # For production env variables
+        translator = deepl.Translator(deepl_auth_key)
 
-        # Get translation from DeepL
-        result = translator.translate_text(
+        # Get current usage
+        usage_obj = translator.get_usage()
+        usage = usage_obj.character.count
+
+        # Check current usage, and output error message if there is not enough
+        # usage left to translate this source text.
+        if usage + len(source_text) >= USAGE_LIMIT:
+            result = USAGE_LIMIT_MESSAGE
+        else:
+            # Get translation
+            result = translator.translate_text(
                 source_text,
                 source_lang=source_lang,
                 target_lang=target_lang,
                 glossary=None,
             )
-
-        # Get current usage from DeepL
-        usage_obj = translator.get_usage()
-        usage = usage_obj.character.count
+            usage += len(source_text)
 
     except DeepLException as e:
-        result = "DeepL error: " + str(e)
+        result = "DeepL Error: " + str(e)
         return result, usage
 
     except Exception as e:
         result = "Error: " + str(e)
         return result, usage
+
+    result = empty_check(result)
 
     return result, usage
 
@@ -108,45 +157,58 @@ def call_google_api_v3(source_text, source_lang, target_lang):
         usage (int): Number of characters translated so far in the current month.
     """
 
-    env = Env()
-    env.read_env()
+    # For local environment variables
+    # env = Env()
+    # env.read_env()
 
-    try:
-        # Authenticate
+    # Check current usage, and output error message if there is not enough
+    # usage left to translate this source text.
+    usage = get_google_usage()
+    if usage + len(source_text) > USAGE_LIMIT:
+        result = USAGE_LIMIT_MESSAGE
+    else:
+        # Get translation from Google
+        try:
+            # Authenticate
+            service_account_key = str(
+                # settings.BASE_DIR.joinpath(env.str("GOOGLE_PROJECT_CREDENTIALS"))  # Local
+                settings.BASE_DIR.joinpath(os.environ["GOOGLE_PROJECT_CREDENTIALS"])  # Production
+            )
+            credentials = service_account.Credentials.from_service_account_file(
+                service_account_key
+            )
+            client = translate.TranslationServiceClient(credentials=credentials)
 
-        service_account_key = str(settings.BASE_DIR.joinpath(env.str("GOOGLE_PROJECT_CREDENTIALS")))
+            # Set up Google project params
+            # project_id = env.str("GOOGLE_PROJECT_ID")  # Local version
+            project_id = os.environ["GOOGLE_PROJECT_ID"]  # Deployment version
 
-        credentials = service_account.Credentials.from_service_account_file(
-            service_account_key
-        )
+            location = "global"
+            parent = f"projects/{project_id}/locations/{location}"
 
-        client = translate.TranslationServiceClient(credentials=credentials)
+            # Get translation
+            response = client.translate_text(
+                request={
+                    "parent": parent,
+                    "contents": [source_text],
+                    "mime_type": "text/plain",  # mime types: text/plain, text/html
+                    "source_language_code": source_lang,
+                    "target_language_code": target_lang,
+                }
+            )
 
-        # Translate
+            if response.translations[0].translated_text:
+                result = response.translations[0].translated_text
+            else:
+                result = (
+                    "Error: Translation not included in response from Google."
+                )
 
-        project_id = env.str("GOOGLE_PROJECT_ID")
-        location = "global"
-        parent = f"projects/{project_id}/locations/{location}"
+        except Exception as e:
+            result = "Google Error: " + str(e)
 
-        response = client.translate_text(
-            request={
-                "parent": parent,
-                "contents": [source_text],
-                "mime_type": "text/plain",  # mime types: text/plain, text/html
-                "source_language_code": source_lang,
-                "target_language_code": target_lang,
-            }
-        )
-
-        if response.translations[0].translated_text:
-            result = response.translations[0].translated_text
-        else:
-            result = "Google error: Translation not included in response from Google."
-
-    except Exception as e:
-        result = "Google error: " + str(e)
-
-    usage = get_google_usage(source_text)
+        usage = update_google_usage(source_text)
+        result = empty_check(result)
 
     return result, usage
 

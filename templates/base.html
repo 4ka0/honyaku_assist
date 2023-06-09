@@ -28,7 +28,7 @@
                         <!-- Navbar -->
                         <nav class="navbar navbar-light mb-5 justify-content-center">
                             <a class="navbar-brand" href="{% url 'index' %}">Honyaku Assist</a>
-                            <span class="navbar-text">A machine translation assistant for humans suffering from temporary translator's block</span>
+                            <span class="navbar-text">< a translation assistant for comparing machine engine output ></span>
                         </nav>
 
                         <!-- Input form -->
@@ -57,6 +57,8 @@
                                             <button
                                                 type="submit"
                                                 class="btn btn-primary my-3"
+                                                id="submit-button"
+                                                onclick="showSpinner();"
                                                 hx-post="{% url 'index' %}"
                                                 hx-target="#results"
                                                 hx-swap="innerHTML" >
@@ -96,22 +98,8 @@
         <!-- HTMX -->
         <script src="{% static 'js/htmx.min.js' %}"></script>
 
-        <!--
-        The below script has two uses.
-        (1) Sets the focus on the textarea upon the initial page load so as to
-        be ready to receive input of the text to be translated from the user.
-        (2) After the latest results have been inserted into the page, the focus
-        is set on the textarea and the previous query that remains in the
-        textarea is selected, which makes it easy for the user to either delete
-        the previous query or revise the previous query for the next query.
-        -->
-        <script>
-            document.body.addEventListener('htmx:afterSwap', () => {
-                const textArea = document.getElementById('id_source_text');
-                textArea.focus();
-                textArea.select();
-            });
-        </script>
-    </body>
+        <!-- Custom JS -->
+        <script src="{% static 'js/custom.js' %}"></script>
 
+    </body>
 </html>
