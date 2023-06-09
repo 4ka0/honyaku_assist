@@ -21,3 +21,6 @@ A webapp for comparing output from the DeepL and Google Translate machine transl
 ### Screenshots
 
 <img src="screenshot.png"></br>
+
+https://github.com/4ka0/honyaku_assist/assets/39420293/e2dabde3-c236-4b67-b95c-0922df0d4d49
+
