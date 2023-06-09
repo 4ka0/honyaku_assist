@@ -5,7 +5,7 @@
     DeepL result
 
     <!-- Show details if no errors received from DeepL -->
-    {% if not "error" in deepl_result %}
+    {% if not "Error" in deepl_result %}
         <span class="small text-muted">
             ({{ target_lang|upper }})
             (No. of characters: {{ deepl_result_length|intcomma }})
@@ -15,7 +15,7 @@
 
     <!-- DeepL result -->
 
-    {% if not "error" in deepl_result %}
+    {% if not "Error" in deepl_result %}
         <div class="alert alert-info" role="alert">
     {% else %}
         <div class="alert alert-danger" role="alert">
@@ -29,7 +29,7 @@
     Google result
 
     <!-- Show details if no errors  received from Google -->
-    {% if not "error" in google_result %}
+    {% if not "Error" in google_result %}
         <span class="small text-muted">
             ({{ target_lang|upper }})
             (No. of characters: {{ google_result_length|intcomma }})
@@ -38,7 +38,7 @@
     {% endif %}
 
     <!-- Google result -->
-    {% if not "error" in google_result %}
+    {% if not "Error" in google_result %}
         <div class="alert alert-primary" role="alert">
     {% else %}
         <div class="alert alert-danger" role="alert">
