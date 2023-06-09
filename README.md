@@ -13,6 +13,9 @@ A webapp for comparing output from the DeepL and Google Translate machine transl
 * Django 4.1.3
 * Bootstrap 5
 * HTMX
+* Docker
+* Nginx
+* PostgreSQL
 
 ### Screenshots
 
