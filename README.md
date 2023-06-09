@@ -20,4 +20,4 @@ A webapp for comparing output from the DeepL and Google Translate machine transl
 
 ### Example:
 
-https://github.com/4ka0/honyaku_assist/assets/39420293/e2dabde3-c236-4b67-b95c-0922df0d4d49
+https://github.com/4ka0/honyaku_assist/assets/39420293/9b6cebab-6cd7-45eb-9d5f-a0ff58154959
