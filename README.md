@@ -15,6 +15,7 @@ A webapp for comparing output from the DeepL and Google Translate machine transl
 * Bootstrap 5
 * HTMX
 * Docker
+* Gunicorn
 * Nginx
 * PostgreSQL
 
